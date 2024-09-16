@@ -20,4 +20,30 @@ userModel.postData = (data, callback) =>{
         return callback(null, result);
     });
 }
+userModel.updateData = (id, data, callback) => {
+    dbConn.query(
+      "UPDATE jei_table_1 SET name=?, age=?, address=? WHERE id=?",
+      [data.name, data.age, data.address, id],
+      (error, result) => {
+        if (error) {
+          console.error("Error updating grade 11 data: ", error);
+          return callback(error, null);
+        }
+  
+        return callback(null, result);
+      }
+    );
+  };
+  userModel.deleteData = (idsToDelete, callback) => {
+    const query = "DELETE FROM jei_table_1 WHERE id = ?";
+  
+    dbConn.query(query, [idsToDelete], (error, result) => {
+      if (error) {
+        console.error("Error deleting grade 11 data: ", error);
+        return callback(error, null);
+      }
+  
+      return callback(null, result);
+    });
+  };
 module.exports = userModel
