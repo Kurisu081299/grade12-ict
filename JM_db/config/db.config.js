@@ -7,7 +7,7 @@ const dbConn = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '1234',
-    database: 'jei_db',
+    database: 'JM_DB',
     connectTimeout: 10000
 });
 
