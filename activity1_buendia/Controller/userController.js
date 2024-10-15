@@ -4,20 +4,20 @@ const userController = {};
 userController.getProducts = (req, res) => {
     userModel.getProductsModel ((error, getData)=> {
         if (error){
-            console.error("Error getting data. Error: ", error);
+            console.error("Error getting products data. Error: ", error);
             return res.status(500).json({message: "Error Getting Data"});
         }
-        return res.status (200).json({message: "Data retrieved successfully", data: getData});
+        return res.status (200).json({message: "Product Data retrieved successfully", data: getData});
     });
 };
 
 userController.getStores = (req, res) => {
     userModel.getStoresModel ((error, getData)=> {
         if (error){
-            console.error("Error getting data. Error: ", error);
+            console.error("Error getting store data. Error: ", error);
             return res.status(500).json({message: "Error Getting Data"});
         }
-        return res.status (200).json({message: "Data retrieved successfully", data: getData});
+        return res.status (200).json({message: "Store Data retrieved successfully", data: getData});
     });
 };
 
@@ -30,10 +30,10 @@ userController.postProducts = (req, res) => {
 
     userModel.postProducts(data, (error,result) => {
         if (error){
-            console.error("Error inserting data. Error: ", error);
+            console.error("Error inserting product data. Error: ", error);
             return res.status(500).json({message: "Error inserting Data"});
         }
-        return res.status (200).json({message: "Data inserted successfully"});
+        return res.status (200).json({message: "Product Data inserted successfully"});
     });
 }
 
@@ -44,10 +44,10 @@ userController.postStores = (req, res) => {
 
     userModel.postStores (data, (error,result) => {
         if (error){
-            console.error("Error inserting data. Error: ", error);
+            console.error("Error inserting store data. Error: ", error);
             return res.status(500).json({message: "Error inserting Data"});
         }
-        return res.status (200).json({message: "Data inserted successfully"});
+        return res.status (200).json({message: "Store Data inserted successfully"});
     });
 }
 
@@ -62,40 +62,43 @@ userController.putProducts = (req, res) => {
       return res.status(400).json({ message: "Please provide item_name, price, and description" });
     }
   
-    const data = { item_name, price, description };
+    const data = { item_name, price, description};
   
-    // Call the model to update grade 11 data
+    // Call the model to update grade 12 data
     userModel.updateProducts(id, data, (error, result) => {
       if (error) {
-        console.error("Error updating grade 12 data: ", error);
-        return res.status(500).json({ message: "Error updating grade 12 data" });
+        console.error("Error updating product data: ", error);
+        return res.status(500).json({ message: "Error updating product data" });
       }
   
-      return res.status(200).json({ message: "Grade 12 data updated successfully" });
+      return res.status(200).json({ message: "Product data updated successfully" });
     });
   };
 
-  userController.putStores = (req, res) => {
-    const { id } = req.body; // Get id from URL params
-    const { store_name, stock_number, ID } = req.body;
-  
-    // Check if required fields are provided
-    if (!store_name || !stock_number || !ID) {
-      return res.status(400).json({ message: "Please provide store_name and stock_number" });
+// AAAAAAAAAAAAAAAAAAAAAAAA
+// AAAAAAAAAAAAAAAAAAAAAAAA
+
+userController.putStores = (req, res) => {
+  const { id } = req.body; // Get id from URL params
+  const { store_name, stock_number} = req.body;
+
+  // Check if required fields are provided
+  if (!store_name || !stock_number) {
+    return res.status(400).json({ message: "Please provide item_name, price, and description" });
+  }
+
+  const data = { store_name, stock_number};
+
+  // Call the model to update grade 12 data
+  userModel.updateStores(id, data, (error, result) => {
+    if (error) {
+      console.error("Error updating store data: ", error);
+      return res.status(500).json({ message: "Error updating store data" });
     }
-  
-    const data = { store_name, stock_number, ID };
-  
-    // Call the model to update grade 11 data
-    userModel.updateStores(id, data, (error, result) => {
-      if (error) {
-        console.error("Error updating grade 12 data: ", error);
-        return res.status(500).json({ message: "Error updating grade 12 data" });
-      }
-  
-      return res.status(200).json({ message: "Grade 12 data updated successfully" });
-    });
-  };
+
+    return res.status(200).json({ message: "Store data updated successfully" });
+  });
+};
 
   //DELETE DATA
 
@@ -108,11 +111,11 @@ userController.putProducts = (req, res) => {
   
     userModel.deleteProducts(idsToDelete, (error, result) => {
       if (error) {
-        console.error("Error deleting grade 12 data: ", error);
-        return res.status(500).json({ message: "Error deleting grade 12 data" });
+        console.error("Error deleting product data: ", error);
+        return res.status(500).json({ message: "Error deleting product data" });
       }
   
-      return res.status(200).json({ message: "Grade 12 data deleted successfully", deletedCount: result.affectedRows });
+      return res.status(200).json({ message: "Product data deleted successfully", deletedCount: result.affectedRows });
     });
   };
 
@@ -126,11 +129,11 @@ userController.putProducts = (req, res) => {
   
     userModel.deleteStores(idsToDelete, (error, result) => {
       if (error) {
-        console.error("Error deleting grade 12 data: ", error);
-        return res.status(500).json({ message: "Error deleting grade 12 data" });
+        console.error("Error deleting store data: ", error);
+        return res.status(500).json({ message: "Error deleting store data" });
       }
   
-      return res.status(200).json({ message: "Grade 12 data deleted successfully", deletedCount: result.affectedRows });
+      return res.status(200).json({ message: "Store data deleted successfully", deletedCount: result.affectedRows });
     });
   };
 
