@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Products</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Purchase Products</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="purchase.html">Purchase</a></li>
+                <li><a href="customer.html">Customer</a></li>
+                <li><a href="cashier.html">Cashier</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Make a Purchase</h2>
+            <form id="purchase-form">
+                <label for="product">Select Product:</label>
+                <select id="product" required></select>
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="1" required>
+                <label for="customerId">Customer ID:</label>
+                <input type="number" id="customerId" name="customerId" min="1" required>
+                <label for="cashierId">Cashier ID:</label>
+                <input type="number" id="cashierId" name="cashierId" min="1" required>
+                <button type="submit">Purchase</button>
+            </form>
+            <div id="response-message"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 T8ndahan. All rights reserved.</p>
+    </footer>
+    <script>
+        // Fetch products from the API and populate the select element
+        fetch('http://localhost:5000/api/v1/products/all')
+            .then(response => response.json())
+            .then(data => {
+                const productSelect = document.getElementById('product');
+                if (data.message === "Products Retrieved successfully") {
+                    data.data.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.product_id; // Set value to product_id
+                        option.textContent = `${product.name} - $${product.price}`; // Display product name and price
+                        productSelect.appendChild(option);
+                    });
+                } else {
+                    productSelect.innerHTML = '<option value="">No products available</option>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching products:', error);
+                const productSelect = document.getElementById('product');
+                productSelect.innerHTML = '<option value="">Error loading products</option>';
+            });
+
+        document.getElementById('purchase-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Gather form data
+            const productId = document.getElementById('product').value;
+            const quantity = document.getElementById('quantity').value;
+            const customerId = document.getElementById('customerId').value;
+            const cashierId = document.getElementById('cashierId').value;
+
+            // Fetch the price of the selected product from the products list
+            const selectedProduct = [...document.getElementById('product').options].find(option => option.value === productId);
+            const price = parseFloat(selectedProduct.textContent.split('- $')[1]); // Extract price
+
+            // Calculate total amount
+            const amount = price * quantity;
+
+            // Prepare the request body
+            const requestBody = {
+                products_id: productId,
+                customers_id: customerId,
+                cashiers_id: cashierId,
+                amount: amount,
+                status: "okay"
+            };
+
+            // Send the POST request to the API
+            fetch('http://localhost:5000/api/v1/orders/purchase', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the response
+                const responseMessage = document.getElementById('response-message');
+                responseMessage.innerHTML = `<p>${data.message}</p>
+                                              <p>Cashier: ${data.Cashier}</p>
+                                              <p>Customer: ${data.Customer}</p>
+                                              <p>Item: ${data.Item}</p>
+                                              <p>Price: $${data.Price}</p>
+                                              <p>Amount: $${data.Amount}</p>
+                                              <p>Change: $${data.Change}</p>
+                                              <p>Status: ${data.Status}</p>`;
+            })
+            .catch(error => {
+                console.error('Error making purchase:', error);
+                document.getElementById('response-message').innerHTML = '<p>Error making purchase. Please try again.</p>';
+            });
+        });
+    </script>
+</body>
+</html>

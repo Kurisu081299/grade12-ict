@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashier Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Cashier Page</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="purchase.html">Purchase</a></li>
+                <li><a href="customer.html">Customer</a></li>
+                <li><a href="cashier.html">Cashier</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Welcome, Cashier!</h2>
+            <p>This is your area to process transactions and manage sales.</p>
+
+            <h3>Add New Cashier</h3>
+            <form id="cashier-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+                <label for="role">Role:</label>
+                <input type="text" id="role" required>
+                <button type="submit">Add Cashier</button>
+            </form>
+
+            <h3>Cashier Information</h3>
+            <div id="cashier-info"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 T8ndahan. All rights reserved.</p>
+    </footer>
+    <script>
+        // Fetch cashiers from the API and display their information
+        function fetchCashiers() {
+            fetch('http://localhost:5000/api/v1/cashier/all')
+                .then(response => response.json())
+                .then(data => {
+                    const cashierInfoDiv = document.getElementById('cashier-info');
+                    cashierInfoDiv.innerHTML = ''; // Clear previous data
+                    if (data.message === "Products Retrieved successfully") {
+                        data.data.forEach(cashier => {
+                            const cashierDetails = `
+                                <p><strong>Name:</strong> ${cashier.name}</p>
+                                <p><strong>Role:</strong> ${cashier.role}</p>
+                                <hr>
+                            `;
+                            cashierInfoDiv.innerHTML += cashierDetails;
+                        });
+                    } else {
+                        cashierInfoDiv.innerHTML = '<p>No cashier information available.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching cashier data:', error);
+                    document.getElementById('cashier-info').innerHTML = '<p>Error loading cashier information. Please try again later.</p>';
+                });
+        }
+
+        // Add event listener for form submission
+        document.getElementById('cashier-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            const name = document.getElementById('name').value;
+            const role = document.getElementById('role').value;
+
+            // POST request to add a new cashier
+            fetch('http://localhost:5000/api/v1/cashier/addcashier', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    role: role
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message); // Display success message
+                fetchCashiers(); // Refresh the cashier list
+                document.getElementById('cashier-form').reset(); // Clear the form
+            })
+            .catch(error => {
+                console.error('Error adding cashier:', error);
+                alert('Error adding cashier. Please try again.');
+            });
+        });
+
+        // Initial fetch of cashiers when the page loads
+        fetchCashiers();
+    </script>
+</body>
+</html>
