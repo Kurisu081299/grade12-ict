@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Products</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Our Amazing Store</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="purchase.html">Purchase</a></li>
+                <li><a href="cashier.html">Purchase</a></li>
+                <li><a href="customer.html">Purchase</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <h2>Purchase Products</h2>
+        <form id="purchase-form">
+            <label for="product">Select a product:</label>
+            <select id="product"></select>
+            <br><br>
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" value="1">
+            <br><br>
+            <input type="submit" value="Purchase">
+        </form>
+        <div id="result"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Our Amazing Store</p>
+    </footer>
+
+    <script>
+        // Function to fetch products from the API and populate the dropdown
+        async function fetchProducts() {
+            try {
+                const response = await fetch('http://localhost:5000/api/v1/products/all');
+                const data = await response.json();
+
+                if (data.message === "Products Retrieved successfully") {
+                    const productSelect = document.getElementById('product');
+                    productSelect.innerHTML = ''; // Clear any existing options
+
+                    data.data.forEach(product => {
+                        const option = document.createElement('option');
+                        option.value = product.product_id; // Use the actual product ID
+                        option.textContent = `${product.name} - $${product.price}`;
+                        productSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Failed to retrieve products:', data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+
+        // Function to handle form submission
+        document.getElementById('purchase-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            const productId = document.getElementById('product').value;
+            const quantity = document.getElementById('quantity').value;
+
+            const payload = {
+                products_id: parseInt(productId),
+                customers_id: 1, // Assuming a customer ID of 1 for demo
+                cashiers_id: 1, // Assuming a cashier ID of 1 for demo
+                amount: parseFloat(quantity) * 90.00, // Adjust based on selected product price
+                status: "okay"
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/v1/orders/purchase', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                if (data.message === "Successful Purchase") {
+                    document.getElementById('result').innerHTML = `
+                        <h3>Purchase Successful!</h3>
+                        <p>Cashier: ${data.Cashier}</p>
+                        <p>Customer: ${data.Customer}</p>
+                        <p>Item: ${data.Item}</p>
+                        <p>Price: $${data.Price}</p>
+                        <p>Amount Paid: $${data.Amount}</p>
+                        <p>Change: $${data.Change}</p>
+                        <p>Status: ${data.Status}</p>
+                    `;
+                } else {
+                    document.getElementById('result').innerText = `Error: ${data.message}`;
+                }
+            } catch (error) {
+                console.error('Error during purchase:', error);
+                document.getElementById('result').innerText = 'An error occurred while processing your purchase.';
+            }
+        });
+
+        // Fetch products when the page loads
+        window.onload = fetchProducts;
+    </script>
+</body>
+</html>
