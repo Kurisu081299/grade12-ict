@@ -1,22 +1,22 @@
 const customerModel = require ('../model/customerModel');
 const customerController = {};
     // CUSTOMER GET
- customerController.getCashier = (req, res) => {
- customerModel.getCashier((error, getData)=> {
+ customerController.getCustomer = (req, res) => {
+ customerModel.getCustomer((error, getData)=> {
         if (error){
-            console.error("Error getting Products. Error: ", error);
-            return res.status(500).json({message: "Error Getting Products"});
+            console.error("Error getting customer. Error: ", error);
+            return res.status(500).json({message: "Error Getting Customer"});
         }
-        return res.status(200).json({message: "Products Retrieved successfully", data: getData});
+        return res.status(200).json({message: "Customer Retrieved successfully", data: getData});
     });
 };
 
-customerController.postCashier = (req, res) => {
+customerController.postCustomer = (req, res) => {
     const {name, email, address, phone} = req.body;
 
     const data = {name, email, address, phone};
     // CUSTOMER POST
-    customerModel.postCashier(data, (error,result) => {
+    customerModel.postCustomer(data, (error,result) => {
         if (error){
             console.error("Error inserting customer.", error);
             return res.status(500).json({ message: "Error inserting customer"});
@@ -25,7 +25,7 @@ customerController.postCashier = (req, res) => {
     });
 }
 
-customerController.putCashier = (req, res) => {
+customerController.putCustomer = (req, res) => {
     const { customer_id } = req.body; // Get id from URL params
     const {name, email, address, phone} = req.body;
   
@@ -34,10 +34,10 @@ customerController.putCashier = (req, res) => {
       return res.status(400).json({ message: "Please provide customer_id, name, email, address, phone" });
     }
   
-    const data = { name, role };
+    const data = { name, email, address, phone };
   
     // CUSTOMER UPDATE
-    customerModel.putCashier(cashier_id, data, (error, result) => {
+    customerModel.putCustomer(customer_id, data, (error, result) => {
       if (error) {
         console.error("Error updating cashier: ", error);
         return res.status(500).json({ message: "Error updating cashier" });
@@ -48,22 +48,22 @@ customerController.putCashier = (req, res) => {
   };
     // CUSTOMER DELETE
 
-  cashierController.deleteCashier = (req, res) => {
-    const idsToDelete = req.body.cashier_id; 
+    customerController.deleteCustomer = (req, res) => {
+    const idsToDelete = req.body.customer_id; 
   
     if (!idsToDelete) {
       return res.status(400).json({ message: "ID to delete are required in the request body" });
     }
   
-    cashierModel.deleteCashier(idsToDelete, (error, result) => {
+    customerModel.deleteCustomer(idsToDelete, (error, result) => {
       if (error) {
-        console.error("Error deleting cashier: ", error);
-        return res.status(500).json({ message: "Error deleting cashier" });
+        console.error("Error deleting customer: ", error);
+        return res.status(500).json({ message: "Error deleting customer" });
       }
   
-      return res.status(200).json({ message: "Cashier deleted successfully", deletedCount: result.affectedRows });
+      return res.status(200).json({ message: "Customer deleted successfully", deletedCount: result.affectedRows });
     });
   };
 
 
-module.exports = cashierController;
+module.exports = customerController;
