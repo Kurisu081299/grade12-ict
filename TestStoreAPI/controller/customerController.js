@@ -26,7 +26,7 @@ customerController.postCustomer = (req, res) => {
 }
 
 customerController.putCustomer = (req, res) => {
-    const { customer_id } = req.body; // Get id from URL params
+    const { customer_id } = req.body; 
     const {name, email, address, phone} = req.body;
   
     // Check if required fields are provided

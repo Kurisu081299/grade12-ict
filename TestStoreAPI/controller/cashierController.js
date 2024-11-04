@@ -26,7 +26,7 @@ cashierController.postCashier = (req, res) => {
 }
 
 cashierController.putCashier = (req, res) => {
-    const { cashier_id } = req.body; // Get id from URL params
+    const { cashier_id } = req.body; 
     const {name, role } = req.body;
   
     // Check if required fields are provided
