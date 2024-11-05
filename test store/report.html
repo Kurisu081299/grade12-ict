@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Place Order - Simple Store</title>
+    <title>Customer Support - Simple Store</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -25,26 +25,26 @@
             overflow: hidden;
             padding: 20px;
         }
-        .order-form {
+        .problem-form {
             background: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
-        .order-form label {
+        .problem-form label {
             display: block;
             margin-bottom: 10px;
         }
-        .order-form input,
-        .order-form select {
+        .problem-form input,
+        .problem-form select {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
         }
-        .order-form button {
+        .problem-form button {
             background: #1B5E20;
             color: white;
             padding: 10px;
@@ -53,7 +53,7 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        .order-form button:hover {
+        .problem-form button:hover {
             background: #45a049;
         }
         footer {
@@ -70,29 +70,26 @@
 <body>
 
 <header>
-    <h1>Place Your Order</h1>
+    <h1>Report</h1>
 </header>
 
 <div class="container">
-    <section class="order-form">
-        <form action="order_confirmation.html" method="get" target="_blank">
-            <label for="product">Select Product:</label>
-            <select id="product" name="product" required>
-                <option value="Product 1">Product 1 - $10.00</option>
-                <option value="Product 2">Product 2 - $15.00</option>
-                <option value="Product 3">Product 3 - $20.00</option>
+    <section class="problem-form">
+        <form action="report_confirmation.html" method="get">
+            <label for="problem">Select Problem:</label>
+            <select id="problem" name="problem" required>
+                <option value="Critical Bugs at Checkout">Critical Bugs at Checkout</option>
+                <option value="Missing Product Data">Missing Product Data</option>
+                <option value="Payment System">Payment System</option>
+                <option value="Extension-Related">Extension-Related</option>
+                <option value="Other">Other</option>
             </select>
 
-            <label for="name">Your Name:</label>
-            <input type="text" id="name" name="name" required>
+            <label for="description">Enter Description:</label>
+            <input type="text" id="description" name="description" required>
 
-            <label for="email">Your Email:</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="address">Shipping Address:</label>
-            <input type="text" id="address" name="address" required>
-
-            <button type="submit">Place Order</button> <a href="home.html" style="text-decoration: none; color: #1B5E20;">Home</a>
+            <button type="submit">Submit Report</button>
+            <a href="home.html" style="text-decoration: none; color: #1B5E20;">Home</a>
         </form>
     </section>
 </div>
