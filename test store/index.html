@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background: #1B5E20; /* A nice green color */
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        nav a {
+            margin: 0 15px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #FFD700; /* Gold color on hover */
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        section {
+            background: #fff;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        section:hover {
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+        .product {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f7f7f7;
+            transition: box-shadow 0.3s;
+        }
+        .product:hover {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+        }
+        footer {
+            background: #1B5E20; /* Match header color */
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Welcome to Our Store</h1>
+    <nav>
+        <a href="home.html" target="_blank">Home</a>
+        <a href="products.html" target="_blank">Products</a>
+        <a href="cashier.html" target="_blank">Cashier</a>
+        <a href="customer.html" target="_blank">Customer</a>
+        <a href="order.html" targer="blank">Place Order</a>
+    </nav>
+</header>
+
+<div class="container" id="home">
+    <section>
+        <h2>Home</h2>
+        <p>Welcome to our store! We offer a wide range of products to meet your needs. Explore our offerings and feel free to reach out with any questions.</p>
+    </section>
+</div>
+
+<div class="container" id="products">
+    <section>
+        <h2>Our Products</h2>
+        <div class="product">
+            <h3>Product 1</h3>
+            <p>Price: $10.00</p>
+            <p>Description: This is a great product.</p>
+        </div>
+        <div class="product">
+            <h3>Product 2</h3>
+            <p>Price: $15.00</p>
+            <p>Description: This product is even better.</p>
+        </div>
+        <div class="product">
+            <h3>Product 3</h3>
+            <p>Price: $20.00</p>
+            <p>Description: You'll love this one!</p>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <h2>Contact Us</h2>
+    <p>Email: info@store.com</p>
+    <p>Phone: (123) 456-7890</p>
+</footer>
+
+</body>
+</html>
