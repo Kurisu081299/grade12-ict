@@ -4,10 +4,10 @@ const cashierController = {};
 cashierController.getCashier = (req, res) => {
     cashierModel.getCashier((error, getData)=> {
         if (error){
-            console.error("Error getting Products. Error: ", error);
-            return res.status(500).json({message: "Error Getting Products"});
+            console.error("Error getting cashier. Error: ", error);
+            return res.status(500).json({message: "Error Getting cashier"});
         }
-        return res.status(200).json({message: "Products Retrieved successfully", data: getData});
+        return res.status(200).json({message: "Cashier Retrieved successfully", data: getData});
     });
 };
 
