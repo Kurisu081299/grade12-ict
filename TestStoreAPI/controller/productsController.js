@@ -26,7 +26,7 @@ productsController.postProducts = (req, res) => {
 }
 
 productsController.putProducts = (req, res) => {
-    const { products_id } = req.body; // Get id from URL params
+    const { products_id } = req.body; 
     const {name, description, price, stock, category} = req.body;
   
     // Check if required fields are provided

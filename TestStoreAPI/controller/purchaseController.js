@@ -26,7 +26,7 @@ purchaseController.postPurchase = (req, res) => {
 }
 
 purchaseController.putPurchase = (req, res) => {
-    const { purchase_id } = req.body; // Get id from URL params
+    const { purchase_id } = req.body; 
     const {product_id, customers_id, cashier_id, amount, status} = req.body;
   
     // Check if required fields are provided
