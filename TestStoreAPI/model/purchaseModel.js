@@ -70,10 +70,10 @@ purchaseModel.getOrders = (callback) => {
 };
 
     purchaseModel.postOrders = (orderData, callback) => {
-        const query = "INSERT INTO orders (products_id, customers_id, cashiers_id, amount, status, `change`) VALUES (?, ?, ?, ?, ?, ?)";
+        const query = "INSERT INTO purchase (products_id, customers_id, cashiers_id, amount, status, `change`) VALUES (?, ?, ?, ?, ?, ?)";
         dbConn.query(query, [orderData.products_id, orderData.customers_id, orderData.cashiers_id, orderData.amount, orderData.status, orderData.change], (error, result) => {
             if (error) {
-                console.error("Error inserting order.", error);
+                console.error("Error inserting purchase.", error);
                 return callback(error, null);
             }
             return callback(null, result);
@@ -82,11 +82,11 @@ purchaseModel.getOrders = (callback) => {
 
     purchaseModel.updateStatus = (id, data, callback) => {
         dbConn.query(
-        "UPDATE orders SET status=? WHERE id=?",
+        "UPDATE purchase SET status=? WHERE id=?",
         [data.status, id],
         (error, result) => {
             if (error) {
-            console.error("Error updating order status: ", error);
+            console.error("Error updating purchase status: ", error);
             return callback(error, null);
             }
     

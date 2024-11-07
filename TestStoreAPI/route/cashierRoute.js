@@ -1,11 +1,11 @@
 const express = require ('express');
 const router = express.Router();
-const cashierControllers = require('../controller/cashierController');
+const cashierController = require('../controller/cashierController');
 
 // list of routes
-router.get("/all", cashierControllers.getData);
-router.post("/addcashier", cashierControllers.postData);
-router.put("/updatecashier",cashierControllers.putData);
-router.delete("/deletecasheir", cashierControllers.deleteData);
+router.get("/all", cashierController.getCashier);
+router.post("/addcashier", cashierController.postCashier);
+router.put("/updatecashier",cashierController.putCashier);
+router.delete("/deletecashier", cashierController.deleteCashier);
 
 module.exports = router;

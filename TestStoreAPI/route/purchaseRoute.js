@@ -1,11 +1,11 @@
 const express = require('express');
-const router = express.Router();
-const purchaseControllers = require('../controller/purchaseController'); 
+const router = express.Router(); 
+const purchaseController = require('../controller/purchaseController'); 
 
-
-router.get("/orders", purchaseControllers.getOrders); 
-router.post("/orders", purchaseControllers.postOrder); 
-router.put("/orders/:id/status", purchaseControllers.updateOrderStatus); 
-router.delete("/orders/:id", purchaseControllers.deleteOrder); 
+// Routes for purchases 
+router.get("/purchase", purchaseController.getPurchase);  
+router.post("/purchase", purchaseController.postPurchase); 
+router.put("/purchase/:id/status", purchaseController.putPurchase); 
+router.delete("/purchase/:id", purchaseController.deletePurchase); 
 
 module.exports = router;
