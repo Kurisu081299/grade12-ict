@@ -66,24 +66,35 @@
         <a href="customer.html" target="_blank">Customer</a>
         <a href="order.html" target="_blank">Place Order</a>
         <a href="report.html" target="_blank">Report</a>
+        <a href="faq.html" targer="_blank">About Us</a>
     </nav>
 </header>
 
 <div class="container">
     <section>
+        <section class="customer-form">
+            <form action="customer_confirmation.html" method="get" target="_blank">
         <h2>Add Customer</h2>
-        <h3><label for="description">Enter Description:</label>
-            <input type="text" id="description" name="description" required></h3>
-            <h2>Update Customer</h2>
+        <h3><label for="namee">Customer Name:</label>
+            <input type="text" id="namee" name="namee" required>
+        </h3>
+        <h3><label for="description">Customer Store ID:</label>
+            <input type="text" id="idd" name="idd" required>
+        </h3>
+        <button type="submit">Confirm</button>
+    </section>
 
-<h3>ADD CUSTOMERS TO UPDATE (DRAFT PHRASE)</h3>
-            <select id="product" name="product" required>
-                <option value="Customer">Customer 1</option>
-                <option value="Customer">Customer 2</option>
-                <option value="Customer">Customer 3</option> 
-            </select>
+    <section style="margin-bottom: 20px;"> 
+        <h2>Update Customer Information</h2>
+        <h3>SELECT WHICH CUSTOMER TO UPDATE</h3>
+        <select id="product" name="product" required>
+            <option value="Customer">CUSTOMER 1 FROM API</option>
+            <option value="Customer">CUSTOMER 2 FROM API</option>
+            <option value="Customer">CUSTOMER 3 FROM API</option>
+        </select>
     </section>
 </div>
+
 
 <footer>
     <h2>Contact Us</h2>
