@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Simple Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background: #1B5E20;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        nav a {
+            margin: 0 15px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #FFD700;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        section {
+            background: #fff;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgb(255, 255, 255);
+        }
+        .product {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f7f7f7;
+            transition: box-shadow 0.3s;
+        }
+        footer {
+            background: #1B5E20;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .order-form {
+            margin-top: 40px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .order-form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .order-form input,
+        .order-form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .order-form button {
+            background: #1B5E20;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .order-form button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>GoodTree Sandwich Store</h1>
+    <nav>
+        <a href="home.html" target="_blank">Home</a>
+        <a href="products.html" target="_blank">Products</a>
+        <a href="cashier.html" target="_blank">Cashier</a>
+        <a href="customer.html" target="_blank">Customer</a>
+        <a href="order.html" target="_blank">Place Order</a>
+        <a href="report.html" target="_blank">Report</a>
+        <a href="faq.html" targer="_blank">About Us</a>
+    </nav>
+</header>
+
+<div class="container">
+    <section>
+        <h2>Explore Our Sandwiches</h2>
+        <div class="product">
+            <img src="https://imgs.search.brave.com/3YEymJxB9p9NvA91vy7AwQQ6axad3ux-YY2Rk7aL6js/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNy8w/My8xMC8xMy80OS9m/YXN0LWZvb2QtMjEz/Mjg2M182NDAuanBn" alt="hotdog" width="150" height="100"/>
+            <h3>Hotdog</h3>
+            <b><p>Price: $0.79</p></b>
+            <p>Description: Get a GoodTreenian hot dog for 79 cents.</p>
+        </div>
+        <div class="product">
+            <img src="https://imgs.search.brave.com/OiW2fiMT2ZsCksqUjc-z9w9n0UKMOOWnNpcnZ-x6B70/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMudW5zcGxhc2gu/Y29tL3Bob3RvLTE1/MzQ3OTA1NjY4NTUt/NGNiNzg4ZDM4OWVj/P2ZtPWpwZyZxPTYw/Jnc9MzAwMCZpeGxp/Yj1yYi00LjAuMyZp/eGlkPU0zd3hNakEz/ZkRCOE1IeHpaV0Z5/WTJoOE1UaDhmR0ox/Y21kbGNueGxibnd3/Zkh3d2ZIeDhNQT09" alt="burger" width="150" height="100"/>
+            <h3>Burger</h3>
+            <b><p>Price: $0.60</p></b>
+            <p>Description: Get a GoodTreenian Burger for 60 cents.</p>
+        </div>
+        <div class="product">
+            <img src="https://imgs.search.brave.com/fV-vEQNJ0D0iS2HffywiaJx5-AD08MwbyPDG1dxcbHM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzAwLzYzLzE0Lzgy/LzM2MF9GXzYzMTQ4/MjEwXzZDVzkyYWRC/bXRDVDhzOTZXMElZ/UEpwa1pzUGg4SVE1/LmpwZw" alt="sandwich" width="150" height="100"/>
+            <h3>Sandwich</h3>
+            <b><p>Price: $0.30</p></b>
+            <p>Description: Get a GoodTreenian Sandwich for 30 cents.</p>
+        </div>
+        <div class="product">
+            <img src="https://imgs.search.brave.com/Tw8tZOH_k4nxPqzanvXbllxOy18B2aPY3iiZa_h9P0A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzAwLzY0LzM3LzAz/LzM2MF9GXzY0Mzcw/Mzg3X2xWQ3JBSFg0/ZWdkQ1N6ZGJOc3FG/M1N5WUF1WXlpeGxL/LmpwZw" alt="bread" width="150" height="100"/>
+            <h3>Bread</h3>
+            <b><p>Price: $0.15</p></b>
+            <p>Description: Get a GoodTreenian Bread for 15 cents.</p>
+        </div>
+        <h2>Explore Our Drinks</h2>
+        <div class="product">
+            <img src="https://imgs.search.brave.com/Ai1ZVeBaqfCdsSHLSL7WCCGoYiouK6usoGCWkIOq87E/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDU4/NDY0NzM1L3Bob3Rv/L2Nva2UuanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPVlibWlh/ek1tWTBEa1doX1c4/VDBwQmtPZ2FpMms2/MmhHRjFUSm45RUM1/VzA9" alt="Coke" width="100" height="150"/>
+            <h3>Coca-Cola</h3>
+            <b><p>Price: $0.50</p></b>
+            <p>Description: Refreshen yourself with Coca-Cola</p>
+        </div>
+        <div class="product">
+            <img src="https://imgs.search.brave.com/q4ZgSyhpuD6iWZ19vSiF-rrh1Ww49ns0hnF9V94JExM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cmVjaXBldmliZXMu/Y29tL3dwLWNvbnRl/bnQvdXBsb2Fkcy8y/MDIxLzAzL2xlbW9u/LWp1aWNlLXJlY2lw/ZS1sZW1vbmFkZS1w/aWMuanBlZw" alt="Lemon Juice" width="100" height="150"/>
+            <h3>Lemon</h3>
+            <b><p>Price: $0.30</p></b>
+            <p>Description: Want a taste of sourness? You'll love this one!</p>
+        </div>
+    </section>
+
+    <footer>
+        <h2>Interested In Our Menu? Buy Now!</h2>
+        <a href="order.html" target="_blank">Place Order</a>
+    </footer>
+
+</body>
+</html>
