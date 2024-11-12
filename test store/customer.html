@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer - Simple Store</title>
+    <title>Customer Management</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -14,17 +14,19 @@
             color: #333;
         }
         header {
-            background: #1B5E20;
+            background: #1b5e20;
             color: #fff;
             padding: 20px 0;
             text-align: center;
         }
         nav {
-            margin: 20px 0;
+            margin: 50px 0;
+            text-align: center;
+            color: #1B5E20;
         }
         nav a {
-            margin: 0 15px;
-            color: #fff;
+            margin: 0 30px;
+            color: #ffffff;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
@@ -36,13 +38,7 @@
             width: 80%;
             margin: auto;
             overflow: hidden;
-        }
-        section {
-            background: #fff;
-            margin: 15px 0;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         footer {
             background: #1B5E20;
@@ -53,56 +49,207 @@
             bottom: 0;
             width: 100%;
         }
+        section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        h2, h3 {
+            color: #1b5e20;
+        }
+        select, input[type="text"], button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #1B5E20;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #4CAF50;
+        }
     </style>
 </head>
 <body>
+    
+    <header>
+        <h1>Good Tree International Store</h1>
+        <nav>
+            <a href="home.html" target="_blank">Home</a>
+            <a href="products.html" target="_blank">Products</a>
+            <a href="cashier.html" target="_blank">Cashier</a>
+            <a href="customer.html" target="_blank">Customer</a> 
+            <a href="order.html" target="_blank">Orders</a>
+            <a href="report.html" target="_blank">Report</a>
+            <a href="faq.html" targer="_blank">About Us</a>
+        </nav>
+    </header>
 
-<header>
-    <h1>Customer Service</h1>
-    <nav>
-        <a href="home.html" target="_blank">Home</a>
-        <a href="products.html" target="_blank">Products</a>
-        <a href="cashier.html" target="_blank">Cashier</a>
-        <a href="customer.html" target="_blank">Customer</a>
-        <a href="order.html" target="_blank">Place Order</a>
-        <a href="report.html" target="_blank">Report</a>
-        <a href="faq.html" targer="_blank">About Us</a>
-    </nav>
-</header>
+    <div class="container">
+        <!-- Add Customer Section moved to the top -->
+        <section style="margin-bottom: 20px;">
+            <h2>Add New Customer</h2>
+            <h3>Enter a New Customer Name</h3>
+            <input type="text" id="newCustomerName" placeholder="Enter new customer name" />
+            <button onclick="addNewCustomer()">Add Customer</button>
+        </section>
 
-<div class="container">
-    <section>
-        <section class="customer-form">
-            <form action="customer_confirmation.html" method="get" target="_blank">
-        <h2>Add Customer</h2>
-        <h3><label for="namee">Customer Name:</label>
-            <input type="text" id="namee" name="namee" required>
-        </h3>
-        <h3><label for="description">Customer Store ID:</label>
-            <input type="text" id="idd" name="idd" required>
-        </h3>
-        <button type="submit">Confirm</button>
-    </section>
+        <!-- Update Customer Section -->
+        <section style="margin-top: 30px;">
+            <h2>Update Customer Information</h2>
+            <h3>SELECT WHICH CUSTOMER TO UPDATE</h3>
+            
+            <!-- First Dropdown -->
+            <select id="product1" name="product1" required>
+                <option value="Customer 1">CUSTOMER 1 FROM API</option>
+                <option value="Customer 2">CUSTOMER 2 FROM API</option>
+                <option value="Customer 3">CUSTOMER 3 FROM API</option>
+                <option value="Customer 4">CUSTOMER 4 FROM API</option>
+                <option value="Customer 5">CUSTOMER 5 FROM API</option>
+            </select>
 
-    <section style="margin-bottom: 20px;"> 
-        <h2>Update Customer Information</h2>
-        <h3>SELECT WHICH CUSTOMER TO UPDATE</h3>
-        <select id="product" name="product" required>
-            <option value="Customer">CUSTOMER 1 FROM API</option>
-            <option value="Customer">CUSTOMER 2 FROM API</option>
-            <option value="Customer">CUSTOMER 3 FROM API</option>
-        </select>
-    </section>
-</div>
+            <h3>Update Customer Name</h3>
+            <input type="text" id="customerNameInput" placeholder="Enter new customer name" />
+            <button onclick="updateCustomerName()">Update Name</button>
+        </section>
+
+        <!-- Delete Customer Section -->
+        <section style="margin-top: 20px;">
+            <h2>Delete Selected Customer</h2>
+            <button onclick="deleteCustomer()">Delete Selected Customer</button>
+        </section>
+
+    </div>
 
 
-<footer>
-    <h2>Contact Us</h2>
-    <p>Email: mygtis.edu.ph@gmail.com</p>
-    <p>Phone: 0912-345-6789</p>
-</footer>
 
+    <script>
+        // Initialize the customer names from localStorage (if available)
+        function initializeCustomerNames() {
+            var storedNames = JSON.parse(localStorage.getItem('customerNames'));
+
+            if (storedNames) {
+                // If customer names are saved in localStorage, update the dropdowns
+                updateDropdown('product1', storedNames);
+            }
+        }
+
+        // Function to update a dropdown with stored customer names
+        function updateDropdown(dropdownId, customerNames) {
+            var selectElement = document.getElementById(dropdownId);
+            selectElement.innerHTML = ''; // Clear the existing options
+
+            // Add a default option
+            var defaultOption = document.createElement("option");
+            defaultOption.text = "Select a Customer";
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            selectElement.appendChild(defaultOption);
+
+            // Add new customer options from the customer names array
+            customerNames.forEach(function(name) {
+                var option = document.createElement("option");
+                option.value = name;
+                option.text = name;
+                selectElement.appendChild(option);
+            });
+        }
+
+        // Function to update the name of the selected customer in the dropdown
+        function updateCustomerName() {
+            var newName = document.getElementById('customerNameInput').value.trim();
+
+            if (newName) {
+                // Get the selected option from the dropdown
+                var selectElement1 = document.getElementById('product1');
+                var selectedOption1 = selectElement1.options[selectElement1.selectedIndex];
+
+                // Update the selected option
+                selectedOption1.text = newName;
+                selectedOption1.value = newName;
+
+                // Store the updated names in localStorage
+                var updatedNames = [];
+                for (var i = 0; i < selectElement1.options.length; i++) {
+                    updatedNames.push(selectElement1.options[i].value);
+                }
+
+                // Store names for the dropdown
+                localStorage.setItem('customerNames', JSON.stringify(updatedNames));
+
+                // Optionally, clear the input field after updating
+                document.getElementById('customerNameInput').value = '';
+                alert('Customer name updated to: ' + newName);
+            } else {
+                alert('Please enter a valid name.');
+            }
+        }
+
+        // Function to delete the selected customer from the dropdowns
+        function deleteCustomer() {
+            var selectElement1 = document.getElementById('product1');
+
+            // Get the selected option
+            var selectedOption1 = selectElement1.options[selectElement1.selectedIndex];
+
+            // Remove selected option
+            selectElement1.remove(selectElement1.selectedIndex);
+
+            // Update the names stored in localStorage by removing the selected customer
+            var updatedNames = [];
+            for (var i = 0; i < selectElement1.options.length; i++) {
+                updatedNames.push(selectElement1.options[i].value);
+            }
+
+            // Store updated names in localStorage
+            localStorage.setItem('customerNames', JSON.stringify(updatedNames));
+
+            // Notify the user
+            alert('Selected customer deleted');
+        }
+
+        // Function to add a new customer to the dropdown and store it in localStorage
+        function addNewCustomer() {
+            var newCustomerName = document.getElementById('newCustomerName').value.trim();
+
+            if (newCustomerName) {
+                // Get the current customer names from localStorage
+                var storedNames = JSON.parse(localStorage.getItem('customerNames')) || [];
+
+                // Add the new customer name to the array
+                storedNames.push(newCustomerName);
+
+                // Update the dropdown with the new customer
+                updateDropdown('product1', storedNames);
+
+                // Store the updated names back in localStorage
+                localStorage.setItem('customerNames', JSON.stringify(storedNames));
+
+                // Clear the input field after adding the new customer
+                document.getElementById('newCustomerName').value = '';
+                alert('New customer added: ' + newCustomerName);
+            } else {
+                alert('Please enter a valid name.');
+            }
+        }
+
+        // Initialize the customer names when the page loads
+        window.onload = initializeCustomerNames;
+    </script>
 </body>
 </html>
 
 
+<footer>
+    <p>&copy; Rolando E. Buendia & Jeishan Marc Agustin</p>
+</footer>

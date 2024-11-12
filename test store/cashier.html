@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cashier - Simple Store</title>
+    <title>Cashier Management</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* Same CSS styles as above */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -14,17 +15,19 @@
             color: #333;
         }
         header {
-            background: #1B5E20;
+            background: #1b5e20;
             color: #fff;
             padding: 20px 0;
             text-align: center;
         }
         nav {
-            margin: 20px 0;
+            margin: 50px 0;
+            text-align: center;
+            color: #1B5E20;
         }
         nav a {
-            margin: 0 15px;
-            color: #fff;
+            margin: 0 30px;
+            color: #ffffff;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
@@ -36,13 +39,7 @@
             width: 80%;
             margin: auto;
             overflow: hidden;
-        }
-        section {
-            background: #fff;
-            margin: 15px 0;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         footer {
             background: #1B5E20;
@@ -53,29 +50,168 @@
             bottom: 0;
             width: 100%;
         }
+        section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        h2, h3 {
+            color: #1b5e20;
+        }
+        select, input[type="text"], button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #1B5E20;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #4CAF50;
+        }
     </style>
 </head>
 <body>
+    
+    <header>
+        <h1>Good Tree International Store - Cashier Management</h1>
+        <nav>
+            <a href="home.html" target="_blank">Home</a>
+            <a href="products.html" target="_blank">Products</a>
+            <a href="cashier.html" target="_blank">Cashier</a>
+            <a href="customer.html" target="_blank">Customer</a> 
+            <a href="order.html" target="_blank">Orders</a>
+            <a href="report.html" target="_blank">Report</a>
+            <a href="faq.html" target="_blank">About Us</a>
+        </nav>
+    </header>
 
-<header>
-    <h1>Cashier</h1>
-    <nav>
-        <a href="home.html" target="_blank">Home</a>
-        <a href="products.html" target="_blank">Products</a>
-        <a href="cashier.html" target="_blank">Cashier</a>
-        <a href="customer.html" target="_blank">Customer</a>
-        <a href="order.html" target="_blank">Place Order</a>
-        <a href="report.html" target="_blank">Report</a>
-        <a href="faq.html" targer="_blank">About Us</a>
-    </nav>
-</header>
+    <div class="container">
+        <!-- Add Cashier Section -->
+        <section style="margin-bottom: 20px;">
+            <h2>Add New Cashier</h2>
+            <h3>Enter a New Cashier Name</h3>
+            <input type="text" id="newCashierName" placeholder="Enter new cashier name" />
+            <button onclick="addNewCashier()">Add Cashier</button>
+        </section>
 
-<div class="container">
-    <section>
-        <h2>Cashier</h2>
-        <p>For transactions, please proceed to the cashier. Our staff is ready to assist you with your purchases.</p>
-    </section>
-</div>
+        <!-- Update Cashier Section -->
+        <section style="margin-top: 30px;">
+            <h2>Update Cashier Information</h2>
+            <h3>SELECT WHICH CASHIER TO UPDATE</h3>
+            
+            <!-- Cashier Dropdown -->
+            <select id="cashier1" name="cashier1" required>
+                <option value="Cashier 1">CASHIER 1</option>
+                <option value="Cashier 2">CASHIER 2</option>
+                <option value="Cashier 3">CASHIER 3</option>
+                <option value="Cashier 4">CASHIER 4</option>
+                <option value="Cashier 5">CASHIER 5</option>
+            </select>
 
+            <h3>Update Cashier Name</h3>
+            <input type="text" id="cashierNameInput" placeholder="Enter new cashier name" />
+            <button onclick="updateCashierName()">Update Name</button>
+        </section>
+
+        <!-- Delete Cashier Section -->
+        <section style="margin-top: 20px;">
+            <h2>Delete Selected Cashier</h2>
+            <button onclick="deleteCashier()">Delete Selected Cashier</button>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; Rolando E. Buendia & Jeishan Marc Agustin</p>
+    </footer>
+
+    <script>
+        // JavaScript for Cashier Management
+        function initializeCashierNames() {
+            var storedNames = JSON.parse(localStorage.getItem('cashierNames'));
+            if (storedNames) {
+                updateDropdown('cashier1', storedNames);
+            }
+        }
+
+        function updateDropdown(dropdownId, cashierNames) {
+            var selectElement = document.getElementById(dropdownId);
+            selectElement.innerHTML = '';
+            var defaultOption = document.createElement("option");
+            defaultOption.text = "Select a Cashier";
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            selectElement.appendChild(defaultOption);
+
+            cashierNames.forEach(function(name) {
+                var option = document.createElement("option");
+                option.value = name;
+                option.text = name;
+                selectElement.appendChild(option);
+            });
+        }
+
+        function updateCashierName() {
+            var newName = document.getElementById('cashierNameInput').value.trim();
+            if (newName) {
+                var selectElement = document.getElementById('cashier1');
+                var selectedOption = selectElement.options[selectElement.selectedIndex];
+                selectedOption.text = newName;
+                selectedOption.value = newName;
+                
+                var updatedNames = [];
+                for (var i = 0; i < selectElement.options.length; i++) {
+                    updatedNames.push(selectElement.options[i].value);
+                }
+                localStorage.setItem('cashierNames', JSON.stringify(updatedNames));
+
+                document.getElementById('cashierNameInput').value = '';
+                alert('Cashier name updated to: ' + newName);
+            } else {
+                alert('Please enter a valid name.');
+            }
+        }
+
+        function deleteCashier() {
+            var selectElement = document.getElementById('cashier1');
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            selectElement.remove(selectElement.selectedIndex);
+
+            var updatedNames = [];
+            for (var i = 0; i < selectElement.options.length; i++) {
+                updatedNames.push(selectElement.options[i].value);
+            }
+            localStorage.setItem('cashierNames', JSON.stringify(updatedNames));
+            alert('Selected cashier deleted');
+        }
+
+        function addNewCashier() {
+            var newCashierName = document.getElementById('newCashierName').value.trim();
+            if (newCashierName) {
+                var storedNames = JSON.parse(localStorage.getItem('cashierNames')) || [];
+                storedNames.push(newCashierName);
+                updateDropdown('cashier1', storedNames);
+                localStorage.setItem('cashierNames', JSON.stringify(storedNames));
+
+                document.getElementById('newCashierName').value = '';
+                alert('New cashier added: ' + newCashierName);
+            } else {
+                alert('Please enter a valid name.');
+            }
+        }
+
+        window.onload = initializeCashierNames;
+    </script>
 </body>
 </html>
