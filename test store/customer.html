@@ -78,6 +78,21 @@
         button:hover {
             background-color: #4CAF50;
         }
+        #customerList {
+            max-width: 400px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .customer-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+        }
     </style>
 </head>
 <body>
@@ -91,12 +106,19 @@
             <a href="customer.html" target="_blank">Customer</a> 
             <a href="order.html" target="_blank">Orders</a>
             <a href="report.html" target="_blank">Report</a>
-            <a href="faq.html" targer="_blank">About Us</a>
+            <a href="faq.html" target="_blank">About Us</a>
         </nav>
     </header>
 
     <div class="container">
-        <!-- Add Customer Section moved to the top -->
+        <!-- View All Customers Section -->
+        <section style="margin-top: 30px;">
+            <h2>View All Customers</h2>
+            <button onclick="viewAllCustomers()">Get All Customers</button>
+            <div id="customerList"></div>
+        </section>
+
+        <!-- Add Customer Section -->
         <section style="margin-bottom: 20px;">
             <h2>Add New Customer</h2>
             <h3>Enter a New Customer Name</h3>
@@ -108,14 +130,8 @@
         <section style="margin-top: 30px;">
             <h2>Update Customer Information</h2>
             <h3>SELECT WHICH CUSTOMER TO UPDATE</h3>
-            
-            <!-- First Dropdown -->
-            <select id="product1" name="product1" required>
-                <option value="Customer 1">CUSTOMER 1 FROM API</option>
-                <option value="Customer 2">CUSTOMER 2 FROM API</option>
-                <option value="Customer 3">CUSTOMER 3 FROM API</option>
-                <option value="Customer 4">CUSTOMER 4 FROM API</option>
-                <option value="Customer 5">CUSTOMER 5 FROM API</option>
+            <select id="customerDropdown" required>
+                <option value="" disabled selected>Select a Customer</option>
             </select>
 
             <h3>Update Customer Name</h3>
@@ -126,26 +142,30 @@
         <!-- Delete Customer Section -->
         <section style="margin-top: 20px;">
             <h2>Delete Selected Customer</h2>
+            <select id="deleteCustomerDropdown" required>
+                <option value="" disabled selected>Select a Customer</option>
+            </select>
             <button onclick="deleteCustomer()">Delete Selected Customer</button>
         </section>
-
     </div>
 
-
+    <footer>
+        <p>&copy; Rolando E. Buendia & Jeishan Marc Agustin</p>
+    </footer>
 
     <script>
         // Initialize the customer names from localStorage (if available)
-        function initializeCustomerNames() {
-            var storedNames = JSON.parse(localStorage.getItem('customerNames'));
+        function initializeCustomerData() {
+            var storedCustomers = JSON.parse(localStorage.getItem('customers')) || [];
 
-            if (storedNames) {
-                // If customer names are saved in localStorage, update the dropdowns
-                updateDropdown('product1', storedNames);
+            if (storedCustomers.length > 0) {
+                updateDropdown('customerDropdown', storedCustomers);
+                updateDropdown('deleteCustomerDropdown', storedCustomers);
             }
         }
 
         // Function to update a dropdown with stored customer names
-        function updateDropdown(dropdownId, customerNames) {
+        function updateDropdown(dropdownId, customers) {
             var selectElement = document.getElementById(dropdownId);
             selectElement.innerHTML = ''; // Clear the existing options
 
@@ -157,65 +177,12 @@
             selectElement.appendChild(defaultOption);
 
             // Add new customer options from the customer names array
-            customerNames.forEach(function(name) {
+            customers.forEach(function(customer) {
                 var option = document.createElement("option");
-                option.value = name;
-                option.text = name;
+                option.value = customer.id;
+                option.text = `${customer.name} - ID: ${customer.id}`;
                 selectElement.appendChild(option);
             });
-        }
-
-        // Function to update the name of the selected customer in the dropdown
-        function updateCustomerName() {
-            var newName = document.getElementById('customerNameInput').value.trim();
-
-            if (newName) {
-                // Get the selected option from the dropdown
-                var selectElement1 = document.getElementById('product1');
-                var selectedOption1 = selectElement1.options[selectElement1.selectedIndex];
-
-                // Update the selected option
-                selectedOption1.text = newName;
-                selectedOption1.value = newName;
-
-                // Store the updated names in localStorage
-                var updatedNames = [];
-                for (var i = 0; i < selectElement1.options.length; i++) {
-                    updatedNames.push(selectElement1.options[i].value);
-                }
-
-                // Store names for the dropdown
-                localStorage.setItem('customerNames', JSON.stringify(updatedNames));
-
-                // Optionally, clear the input field after updating
-                document.getElementById('customerNameInput').value = '';
-                alert('Customer name updated to: ' + newName);
-            } else {
-                alert('Please enter a valid name.');
-            }
-        }
-
-        // Function to delete the selected customer from the dropdowns
-        function deleteCustomer() {
-            var selectElement1 = document.getElementById('product1');
-
-            // Get the selected option
-            var selectedOption1 = selectElement1.options[selectElement1.selectedIndex];
-
-            // Remove selected option
-            selectElement1.remove(selectElement1.selectedIndex);
-
-            // Update the names stored in localStorage by removing the selected customer
-            var updatedNames = [];
-            for (var i = 0; i < selectElement1.options.length; i++) {
-                updatedNames.push(selectElement1.options[i].value);
-            }
-
-            // Store updated names in localStorage
-            localStorage.setItem('customerNames', JSON.stringify(updatedNames));
-
-            // Notify the user
-            alert('Selected customer deleted');
         }
 
         // Function to add a new customer to the dropdown and store it in localStorage
@@ -223,19 +190,18 @@
             var newCustomerName = document.getElementById('newCustomerName').value.trim();
 
             if (newCustomerName) {
-                // Get the current customer names from localStorage
-                var storedNames = JSON.parse(localStorage.getItem('customerNames')) || [];
+                var storedCustomers = JSON.parse(localStorage.getItem('customers')) || [];
+                var newCustomer = {
+                    name: newCustomerName,
+                    id: Date.now().toString()  // Use timestamp as unique ID
+                };
+                storedCustomers.push(newCustomer);
+                localStorage.setItem('customers', JSON.stringify(storedCustomers));
 
-                // Add the new customer name to the array
-                storedNames.push(newCustomerName);
+                // Update dropdowns with the new customer
+                updateDropdown('customerDropdown', storedCustomers);
+                updateDropdown('deleteCustomerDropdown', storedCustomers);
 
-                // Update the dropdown with the new customer
-                updateDropdown('product1', storedNames);
-
-                // Store the updated names back in localStorage
-                localStorage.setItem('customerNames', JSON.stringify(storedNames));
-
-                // Clear the input field after adding the new customer
                 document.getElementById('newCustomerName').value = '';
                 alert('New customer added: ' + newCustomerName);
             } else {
@@ -243,13 +209,72 @@
             }
         }
 
-        // Initialize the customer names when the page loads
-        window.onload = initializeCustomerNames;
+        // Function to update the name of the selected customer in the dropdown
+        function updateCustomerName() {
+            var newName = document.getElementById('customerNameInput').value.trim();
+
+            if (newName) {
+                var selectedCustomerId = document.getElementById('customerDropdown').value;
+                var storedCustomers = JSON.parse(localStorage.getItem('customers')) || [];
+                var customerToUpdate = storedCustomers.find(cust => cust.id === selectedCustomerId);
+
+                if (customerToUpdate) {
+                    customerToUpdate.name = newName;
+                    localStorage.setItem('customers', JSON.stringify(storedCustomers));
+
+                    // Update dropdown with the updated customer
+                    updateDropdown('customerDropdown', storedCustomers);
+                    updateDropdown('deleteCustomerDropdown', storedCustomers);
+
+                    document.getElementById('customerNameInput').value = '';
+                    alert('Customer name updated to: ' + newName);
+                }
+            } else {
+                alert('Please enter a valid name.');
+            }
+        }
+
+        // Function to delete the selected customer from the dropdowns and localStorage
+        function deleteCustomer() {
+            var selectedCustomerId = document.getElementById('deleteCustomerDropdown').value;
+
+            if (selectedCustomerId) {
+                var storedCustomers = JSON.parse(localStorage.getItem('customers')) || [];
+                var updatedCustomers = storedCustomers.filter(cust => cust.id !== selectedCustomerId);
+
+                localStorage.setItem('customers', JSON.stringify(updatedCustomers));
+
+                // Update dropdowns with the remaining customers
+                updateDropdown('customerDropdown', updatedCustomers);
+                updateDropdown('deleteCustomerDropdown', updatedCustomers);
+
+                alert('Selected customer deleted');
+            } else {
+                alert('Please select a customer to delete.');
+            }
+        }
+
+        // Function to view all customers
+        function viewAllCustomers() {
+            var storedCustomers = JSON.parse(localStorage.getItem('customers')) || [];
+
+            var customerListDiv = document.getElementById('customerList');
+            customerListDiv.innerHTML = ''; // Clear the existing list
+
+            if (storedCustomers.length > 0) {
+                storedCustomers.forEach(function(customer) {
+                    var customerDiv = document.createElement('div');
+                    customerDiv.classList.add('customer-item');
+                    customerDiv.textContent = `${customer.name} - ID: ${customer.id}`;
+                    customerListDiv.appendChild(customerDiv);
+                });
+            } else {
+                customerListDiv.innerHTML = '<p>No customers available.</p>';
+            }
+        }
+
+        // Initialize the customer data when the page loads
+        window.onload = initializeCustomerData;
     </script>
 </body>
 </html>
-
-
-<footer>
-    <p>&copy; Rolando E. Buendia & Jeishan Marc Agustin</p>
-</footer>

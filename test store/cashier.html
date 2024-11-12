@@ -6,7 +6,6 @@
     <title>Cashier Management</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Same CSS styles as above */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -60,7 +59,7 @@
         h2, h3 {
             color: #1b5e20;
         }
-        select, input[type="text"], button {
+        select, input[type="text"], input[type="number"], button {
             padding: 10px;
             margin: 10px 0;
             width: 100%;
@@ -78,6 +77,32 @@
         }
         button:hover {
             background-color: #4CAF50;
+        }
+        #cashierList {
+            max-width: 400px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .cashier-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+        }
+        .delete-button {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+        .delete-button:hover {
+            background-color: #e53935;
         }
     </style>
 </head>
@@ -97,37 +122,47 @@
     </header>
 
     <div class="container">
+        <!-- Get All Cashiers Section -->
+        <section>
+            <h2>View All Cashiers</h2>
+            <button onclick="getAllCashiers()">Get All Cashiers</button>
+            <div id="cashierList"></div>
+        </section>
+
         <!-- Add Cashier Section -->
-        <section style="margin-bottom: 20px;">
+        <section>
             <h2>Add New Cashier</h2>
-            <h3>Enter a New Cashier Name</h3>
-            <input type="text" id="newCashierName" placeholder="Enter new cashier name" />
+            <h3>Enter Cashier Details</h3>
+            <input type="text" id="newCashierName" placeholder="Enter cashier name" />
+            <input type="text" id="newCashierRole" placeholder="Enter cashier role (e.g., Sales)" />
+            <input type="number" id="newCashierID" placeholder="Enter cashier ID" />
             <button onclick="addNewCashier()">Add Cashier</button>
         </section>
 
         <!-- Update Cashier Section -->
-        <section style="margin-top: 30px;">
+        <section>
             <h2>Update Cashier Information</h2>
-            <h3>SELECT WHICH CASHIER TO UPDATE</h3>
-            
+            <h3>Select Cashier to Update</h3>
             <!-- Cashier Dropdown -->
-            <select id="cashier1" name="cashier1" required>
-                <option value="Cashier 1">CASHIER 1</option>
-                <option value="Cashier 2">CASHIER 2</option>
-                <option value="Cashier 3">CASHIER 3</option>
-                <option value="Cashier 4">CASHIER 4</option>
-                <option value="Cashier 5">CASHIER 5</option>
+            <select id="cashierDropdown" required>
+                <option value="" disabled selected>Select a Cashier</option>
             </select>
 
-            <h3>Update Cashier Name</h3>
-            <input type="text" id="cashierNameInput" placeholder="Enter new cashier name" />
-            <button onclick="updateCashierName()">Update Name</button>
+            <h3>Update Cashier Details</h3>
+            <input type="text" id="updateCashierName" placeholder="Update cashier name" />
+            <input type="text" id="updateCashierRole" placeholder="Update cashier role" />
+            <input type="number" id="updateCashierID" placeholder="Update cashier ID" />
+            <button onclick="updateCashier()">Update Cashier</button>
         </section>
 
         <!-- Delete Cashier Section -->
-        <section style="margin-top: 20px;">
-            <h2>Delete Selected Cashier</h2>
-            <button onclick="deleteCashier()">Delete Selected Cashier</button>
+        <section>
+            <h2>Delete Cashier</h2>
+            <h3>Select Cashier to Delete</h3>
+            <select id="deleteCashierDropdown" required>
+                <option value="" disabled selected>Select a Cashier</option>
+            </select>
+            <button onclick="deleteCashier()">Delete Cashier</button>
         </section>
 
     </div>
@@ -138,80 +173,96 @@
 
     <script>
         // JavaScript for Cashier Management
-        function initializeCashierNames() {
-            var storedNames = JSON.parse(localStorage.getItem('cashierNames'));
-            if (storedNames) {
-                updateDropdown('cashier1', storedNames);
+        function initializeCashierData() {
+            var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+            if (storedCashiers.length > 0) {
+                updateDropdown(storedCashiers);
             }
         }
 
-        function updateDropdown(dropdownId, cashierNames) {
-            var selectElement = document.getElementById(dropdownId);
-            selectElement.innerHTML = '';
-            var defaultOption = document.createElement("option");
-            defaultOption.text = "Select a Cashier";
-            defaultOption.disabled = true;
-            defaultOption.selected = true;
-            selectElement.appendChild(defaultOption);
+        function updateDropdown(cashiers) {
+            var selectElement = document.getElementById('cashierDropdown');
+            var deleteSelectElement = document.getElementById('deleteCashierDropdown');
+            selectElement.innerHTML = '<option value="" disabled selected>Select a Cashier</option>';
+            deleteSelectElement.innerHTML = '<option value="" disabled selected>Select a Cashier</option>';
 
-            cashierNames.forEach(function(name) {
+            cashiers.forEach(function(cashier) {
                 var option = document.createElement("option");
-                option.value = name;
-                option.text = name;
+                option.value = cashier.id;
+                option.text = `${cashier.name} - ${cashier.role} - ID: ${cashier.id}`;
                 selectElement.appendChild(option);
+                deleteSelectElement.appendChild(option);
             });
         }
 
-        function updateCashierName() {
-            var newName = document.getElementById('cashierNameInput').value.trim();
-            if (newName) {
-                var selectElement = document.getElementById('cashier1');
-                var selectedOption = selectElement.options[selectElement.selectedIndex];
-                selectedOption.text = newName;
-                selectedOption.value = newName;
-                
-                var updatedNames = [];
-                for (var i = 0; i < selectElement.options.length; i++) {
-                    updatedNames.push(selectElement.options[i].value);
-                }
-                localStorage.setItem('cashierNames', JSON.stringify(updatedNames));
+        function addNewCashier() {
+            var name = document.getElementById('newCashierName').value.trim();
+            var role = document.getElementById('newCashierRole').value.trim();
+            var id = document.getElementById('newCashierID').value.trim();
 
-                document.getElementById('cashierNameInput').value = '';
-                alert('Cashier name updated to: ' + newName);
+            if (name && role && id) {
+                var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+                var newCashier = { name: name, role: role, id: id };
+                storedCashiers.push(newCashier);
+                localStorage.setItem('cashiers', JSON.stringify(storedCashiers));
+                updateDropdown(storedCashiers);
+
+                // Clear the input fields
+                document.getElementById('newCashierName').value = '';
+                document.getElementById('newCashierRole').value = '';
+                document.getElementById('newCashierID').value = '';
+                alert('New cashier added: ' + name);
             } else {
-                alert('Please enter a valid name.');
+                alert('Please fill out all fields.');
+            }
+        }
+
+        function getAllCashiers() {
+            var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+            var cashierListDiv = document.getElementById('cashierList');
+            if (storedCashiers.length > 0) {
+                cashierListDiv.innerHTML = '<ul>' + storedCashiers.map(function(cashier) {
+                    return `<li>Name: ${cashier.name}, Role: ${cashier.role}, ID: ${cashier.id}</li>`;
+                }).join('') + '</ul>';
+            } else {
+                cashierListDiv.innerHTML = '<p>No cashiers found.</p>';
+            }
+        }
+
+        function updateCashier() {
+            var cashierID = document.getElementById('cashierDropdown').value;
+            var name = document.getElementById('updateCashierName').value.trim();
+            var role = document.getElementById('updateCashierRole').value.trim();
+            var id = document.getElementById('updateCashierID').value.trim();
+
+            var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+            var cashierToUpdate = storedCashiers.find(cashier => cashier.id === cashierID);
+
+            if (cashierToUpdate) {
+                if (name) cashierToUpdate.name = name;
+                if (role) cashierToUpdate.role = role;
+                if (id) cashierToUpdate.id = id;
+
+                localStorage.setItem('cashiers', JSON.stringify(storedCashiers));
+                updateDropdown(storedCashiers);
+                alert('Cashier updated successfully.');
+            } else {
+                alert('Please select a valid cashier to update.');
             }
         }
 
         function deleteCashier() {
-            var selectElement = document.getElementById('cashier1');
-            var selectedOption = selectElement.options[selectElement.selectedIndex];
-            selectElement.remove(selectElement.selectedIndex);
+            var cashierID = document.getElementById('deleteCashierDropdown').value;
+            var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+            var updatedCashiers = storedCashiers.filter(cashier => cashier.id !== cashierID);
 
-            var updatedNames = [];
-            for (var i = 0; i < selectElement.options.length; i++) {
-                updatedNames.push(selectElement.options[i].value);
-            }
-            localStorage.setItem('cashierNames', JSON.stringify(updatedNames));
-            alert('Selected cashier deleted');
+            localStorage.setItem('cashiers', JSON.stringify(updatedCashiers));
+            updateDropdown(updatedCashiers);
+            getAllCashiers();
+            alert('Cashier deleted successfully.');
         }
 
-        function addNewCashier() {
-            var newCashierName = document.getElementById('newCashierName').value.trim();
-            if (newCashierName) {
-                var storedNames = JSON.parse(localStorage.getItem('cashierNames')) || [];
-                storedNames.push(newCashierName);
-                updateDropdown('cashier1', storedNames);
-                localStorage.setItem('cashierNames', JSON.stringify(storedNames));
-
-                document.getElementById('newCashierName').value = '';
-                alert('New cashier added: ' + newCashierName);
-            } else {
-                alert('Please enter a valid name.');
-            }
-        }
-
-        window.onload = initializeCashierNames;
+        window.onload = initializeCashierData;
     </script>
 </body>
 </html>
