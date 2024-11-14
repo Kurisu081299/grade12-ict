@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to My Website</title>
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #8ea795, #ffffff);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        h1 {
+            color: #2e6a47;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        p {
+            color: #444;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 15px 0;
+        }
+
+        a {
+            text-decoration: none;
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Rainbow Hover Effect */
+        a:hover {
+            background-color: transparent;
+            color: white;
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        a:hover::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff7300, #fffb00, #00ff00, #00bfff, #8a2be2, #ff00ff);
+            animation: rainbow 1s infinite linear;
+        }
+
+        /* Animation for rainbow effect */
+        @keyframes rainbow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Add some space between the emoji and text */
+        a span {
+            margin-right: 10px;
+        }
+
+        /* Styling for the data section */
+        #api-data {
+            margin-top: 40px;
+            text-align: center;
+            width: 80%;
+        }
+
+        .product-item {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-item h3 {
+            font-size: 1.5rem;
+            color: #2e6a47;
+        }
+
+        .product-item p {
+            font-size: 1.2rem;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Good Tree International Store!</h1>
+    <p>Browse our wide range of products and find the perfect item for you. Start shopping now!</p>
+
+    <!-- Links Section with Emojis -->
+    <ul>
+        <li><a href="cashier.html"><span>👨‍💼</span>Cashier</a></li>
+        <li><a href="customer.html"><span>🧑‍🤝‍🧑</span>Customer</a></li>
+        <li><a href="products.html"><span>🛒</span>Products</a></li>
+        <li><a href="order.html"><span>📦</span>Order</a></li>
+        <li><a href="faq.html"><span>❓</span>FAQ</a></li>
+    </ul>
+
+    <!-- Section where API data will be displayed -->
+    <div id="api-data">
+        <!-- Product items will be dynamically added here -->
+    </div>
+
+    <!-- Link the script.js file -->
+    <script src="script.js"></script>
+</body>
+</html>
