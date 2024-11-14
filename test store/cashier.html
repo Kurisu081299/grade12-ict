@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cashier - Simple Store</title>
+    <title>Cashier Management</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -14,17 +14,19 @@
             color: #333;
         }
         header {
-            background: #1B5E20;
+            background: #1b5e20;
             color: #fff;
             padding: 20px 0;
             text-align: center;
         }
         nav {
-            margin: 20px 0;
+            margin: 50px 0;
+            text-align: center;
+            color: #1B5E20;
         }
         nav a {
-            margin: 0 15px;
-            color: #fff;
+            margin: 0 30px;
+            color: #ffffff;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
@@ -36,13 +38,7 @@
             width: 80%;
             margin: auto;
             overflow: hidden;
-        }
-        section {
-            background: #fff;
-            margin: 15px 0;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         footer {
             background: #1B5E20;
@@ -53,29 +49,221 @@
             bottom: 0;
             width: 100%;
         }
+        section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        h2, h3 {
+            color: #1b5e20;
+        }
+        select, input[type="text"], input[type="number"], button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #1B5E20;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #4CAF50;
+        }
+        #cashierList {
+            max-width: 400px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .cashier-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+        }
+        .delete-button {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+        .delete-button:hover {
+            background-color: #e53935;
+        }
     </style>
 </head>
 <body>
+    
+    <header>
+        <h1>Good Tree International Store - Cashier Management</h1>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cashier.html">Cashier</a>
+            <a href="customer.html">Customer</a> 
+            <a href="order.html">Orders</a>
+            <a href="report.html">Report</a>
+            <a href="faq.html">About Us</a>
+            <a href="purchase.html">Cart</a>
+        </nav>
+    </header>
 
-<header>
-    <h1>Cashier</h1>
-    <nav>
-        <a href="home.html" target="_blank">Home</a>
-        <a href="products.html" target="_blank">Products</a>
-        <a href="cashier.html" target="_blank">Cashier</a>
-        <a href="customer.html" target="_blank">Customer</a>
-        <a href="order.html" target="_blank">Place Order</a>
-        <a href="report.html" target="_blank">Report</a>
-        <a href="faq.html" targer="_blank">About Us</a>
-    </nav>
-</header>
+    <div class="container">
+        <!-- Get All Cashiers Section -->
+        <section>
+            <h2>View All Cashiers</h2>
+            <button onclick="getAllCashiers()">Get All Cashiers</button>
+            <div id="cashierList"></div>
+        </section>
 
-<div class="container">
-    <section>
-        <h2>Cashier</h2>
-        <p>For transactions, please proceed to the cashier. Our staff is ready to assist you with your purchases.</p>
-    </section>
-</div>
+        <!-- Add Cashier Section -->
+        <section>
+            <h2>Add New Cashier</h2>
+            <h3>Enter Cashier Details</h3>
+            <input type="text" id="newCashierName" placeholder="Enter cashier name" />
+            <input type="text" id="newCashierRole" placeholder="Enter cashier role (e.g., Sales)" />
+            <input type="number" id="newCashierID" placeholder="Enter cashier ID" />
+            <button onclick="addNewCashier()">Add Cashier</button>
+        </section>
 
+        <!-- Update Cashier Section -->
+        <section>
+            <h2>Update Cashier Information</h2>
+            <h3>Select Cashier to Update</h3>
+            <!-- Cashier Dropdown -->
+            <select id="cashierDropdown" required>
+                <option value="" disabled selected>Select a Cashier</option>
+            </select>
+
+            <h3>Update Cashier Details</h3>
+            <input type="text" id="updateCashierName" placeholder="Update cashier name" />
+            <input type="text" id="updateCashierRole" placeholder="Update cashier role" />
+            <input type="number" id="updateCashierID" placeholder="Update cashier ID" />
+            <button onclick="updateCashier()">Update Cashier</button>
+        </section>
+
+        <!-- Delete Cashier Section -->
+        <section>
+            <h2>Delete Cashier</h2>
+            <h3>Select Cashier to Delete</h3>
+            <select id="deleteCashierDropdown" required>
+                <option value="" disabled selected>Select a Cashier</option>
+            </select>
+            <button onclick="deleteCashier()">Delete Cashier</button>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; Rolando E. Buendia & Jeishan Marc Agustin</p>
+    </footer>
+
+    <script>
+        // JavaScript for Cashier Management
+        function initializeCashierData() {
+            var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+            if (storedCashiers.length > 0) {
+                updateDropdown(storedCashiers);
+            }
+        }
+
+        function updateDropdown(cashiers) {
+            var selectElement = document.getElementById('cashierDropdown');
+            var deleteSelectElement = document.getElementById('deleteCashierDropdown');
+            selectElement.innerHTML = '<option value="" disabled selected>Select a Cashier</option>';
+            deleteSelectElement.innerHTML = '<option value="" disabled selected>Select a Cashier</option>';
+
+            cashiers.forEach(function(cashier) {
+                var option = document.createElement("option");
+                option.value = cashier.id;
+                option.text = `${cashier.name} - ${cashier.role} - ID: ${cashier.id}`;
+                selectElement.appendChild(option);
+                deleteSelectElement.appendChild(option);
+            });
+        }
+
+        function addNewCashier() {
+            var name = document.getElementById('newCashierName').value.trim();
+            var role = document.getElementById('newCashierRole').value.trim();
+            var id = document.getElementById('newCashierID').value.trim();
+
+            if (name && role && id) {
+                var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+                var newCashier = { name: name, role: role, id: id };
+                storedCashiers.push(newCashier);
+                localStorage.setItem('cashiers', JSON.stringify(storedCashiers));
+                updateDropdown(storedCashiers);
+
+                // Clear the input fields
+                document.getElementById('newCashierName').value = '';
+                document.getElementById('newCashierRole').value = '';
+                document.getElementById('newCashierID').value = '';
+                alert('New cashier added: ' + name);
+            } else {
+                alert('Please fill out all fields.');
+            }
+        }
+
+        function getAllCashiers() {
+            var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+            var cashierListDiv = document.getElementById('cashierList');
+            if (storedCashiers.length > 0) {
+                cashierListDiv.innerHTML = '<ul>' + storedCashiers.map(function(cashier) {
+                    return `<li>Name: ${cashier.name}, Role: ${cashier.role}, ID: ${cashier.id}</li>`;
+                }).join('') + '</ul>';
+            } else {
+                cashierListDiv.innerHTML = '<p>No cashiers found.</p>';
+            }
+        }
+
+        function updateCashier() {
+            var cashierID = document.getElementById('cashierDropdown').value;
+            var name = document.getElementById('updateCashierName').value.trim();
+            var role = document.getElementById('updateCashierRole').value.trim();
+            var id = document.getElementById('updateCashierID').value.trim();
+
+            var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+            var cashierToUpdate = storedCashiers.find(cashier => cashier.id === cashierID);
+
+            if (cashierToUpdate) {
+                if (name) cashierToUpdate.name = name;
+                if (role) cashierToUpdate.role = role;
+                if (id) cashierToUpdate.id = id;
+
+                localStorage.setItem('cashiers', JSON.stringify(storedCashiers));
+                updateDropdown(storedCashiers);
+                alert('Cashier updated successfully.');
+            } else {
+                alert('Please select a valid cashier to update.');
+            }
+        }
+
+        function deleteCashier() {
+            var cashierID = document.getElementById('deleteCashierDropdown').value;
+            var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+            var updatedCashiers = storedCashiers.filter(cashier => cashier.id !== cashierID);
+
+            localStorage.setItem('cashiers', JSON.stringify(updatedCashiers));
+            updateDropdown(updatedCashiers);
+            getAllCashiers();
+            alert('Cashier deleted successfully.');
+        }
+
+        window.onload = initializeCashierData;
+    </script>
 </body>
 </html>

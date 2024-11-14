@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background: #1b5e20;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        nav {
+            margin: 50px 0;
+            text-align: center;
+            color: #1B5E20;
+        }
+        nav a {
+            margin: 0 30px;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #FFD700;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        footer {
+            background: #1B5E20;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        h2, h3 {
+            color: #1b5e20;
+        }
+        select, input[type="text"], button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #1B5E20;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #4CAF50;
+        }
+        #productList {
+            max-width: 400px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .product-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+        }
+        .delete-button {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+        .delete-button:hover {
+            background-color: #e53935;
+        }
+        .add-to-cart-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        .add-to-cart-button:hover {
+            background-color: #388E3C;
+        }
+        .cart-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header and Navigation Bar -->
+<header>
+    <h1>Good Tree International Store - Product Management</h1>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="cashier.html">Cashier</a>
+        <a href="customer.html">Customer</a>
+        <a href="order.html">Orders</a>
+        <a href="report.html">Report</a>
+        <a href="faq.html">About Us</a>
+        <a href="purchase.html">Cart</a>
+    </nav>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+
+    <!-- Choose Customer for Checkout Section -->
+    <section>
+        <h2>Choose Customer for Checkout</h2>
+        <select id="customerDropdown" required>
+            <option value="" disabled selected>Select a Customer</option>
+        </select>
+        <button onclick="chooseCustomer()">Choose Customer</button>
+    </section>
+
+    <!-- Choose Cashier for Order Handling Section -->
+    <section>
+        <h2>Choose Cashier to Handle Order</h2>
+        <select id="cashierDropdown" required onchange="displayCashierRole()">
+            <option value="" disabled selected>Select a Cashier</option>
+        </select>
+        <div id="cashierRole"></div>
+        <button onclick="chooseCashier()">Choose Cashier</button>
+    </section>
+
+    <!-- View All Products Section -->
+    <section>
+        <h2>View All Products</h2>
+        <button onclick="getAllProducts()">Get All Products</button>
+        <div id="productList"></div>
+    </section>
+
+    <!-- Cart Section -->
+    <section>
+        <h2>Your Cart</h2>
+        <div id="cartItems"></div>
+        <h3>Total: $<span id="totalPrice">0.00</span></h3>
+        <button onclick="clearCart()">Clear Cart</button>
+        <button onclick="proceedToCheckout()">Proceed to Checkout</button>
+        <!-- New Button for Order Summary -->
+        <button onclick="showOrderSummary()">View Order Summary</button>
+    </section>
+
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; Rolando E. Buendia & Jeishan Marc Agustin</p>
+</footer>
+
+<script>
+// JavaScript for Product Management, Cart System, and Customer & Cashier Selection
+
+// Initialize product, customer, and cashier data on page load
+function initializeData() {
+    var storedProducts = JSON.parse(localStorage.getItem('products')) || [];
+    var storedCustomers = JSON.parse(localStorage.getItem('customers')) || [];
+    var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+
+    if (storedProducts.length > 0) {
+        displayProducts(storedProducts);
+    }
+    loadCart();
+    initializeDropdowns(storedCustomers, storedCashiers);
+}
+
+// Display all products
+function displayProducts(products) {
+    var productListDiv = document.getElementById('productList');
+    productListDiv.innerHTML = '';
+
+    products.forEach(function(product) {
+        var productDiv = document.createElement('div');
+        productDiv.classList.add('product-item');
+        productDiv.innerHTML = `${product.name} - $${product.price} - Quantity: ${product.quantity} 
+            <button class="add-to-cart-button" onclick="addToCart('${product.id}')">Add to Cart</button>`;
+        productListDiv.appendChild(productDiv);
+    });
+}
+
+// Add product to cart
+function addToCart(productId) {
+    var products = JSON.parse(localStorage.getItem('products')) || [];
+    var cart = JSON.parse(localStorage.getItem('cart')) || [];
+    var product = products.find(p => p.id === productId);
+
+    if (product) {
+        var existingProduct = cart.find(item => item.id === productId);
+        if (existingProduct) {
+            existingProduct.quantity++;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        loadCart();
+    }
+}
+
+// Load cart items from localStorage
+function loadCart() {
+    var cart = JSON.parse(localStorage.getItem('cart')) || [];
+    var cartItemsDiv = document.getElementById('cartItems');
+    cartItemsDiv.innerHTML = '';
+    var total = 0;
+
+    cart.forEach(function(item) {
+        var itemDiv = document.createElement('div');
+        itemDiv.classList.add('cart-item');
+        itemDiv.innerHTML = `<img src="${item.image || 'https://via.placeholder.com/50'}" alt="${item.name}"> ${item.name} - $${item.price} x ${item.quantity}`;
+        cartItemsDiv.appendChild(itemDiv);
+        total += item.price * item.quantity;
+    });
+
+    document.getElementById('totalPrice').textContent = total.toFixed(2);
+}
+
+// Clear cart
+function clearCart() {
+    localStorage.removeItem('cart');
+    loadCart();
+}
+
+// Choose Customer for Checkout
+function chooseCustomer() {
+    var selectedCustomer = document.getElementById('customerDropdown').value;
+    alert(`Customer selected: ${selectedCustomer}`);
+}
+
+// Choose Cashier for Order Handling
+function chooseCashier() {
+    var selectedCashier = document.getElementById('cashierDropdown').value;
+    alert(`Cashier selected: ${selectedCashier}`);
+}
+
+// Display the selected cashier's role
+function displayCashierRole() {
+    var cashierDropdown = document.getElementById('cashierDropdown');
+    var selectedCashierId = cashierDropdown.value;
+    var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+
+    var selectedCashier = storedCashiers.find(cashier => cashier.id === selectedCashierId);
+    var cashierRoleDiv = document.getElementById('cashierRole');
+
+    if (selectedCashier) {
+        cashierRoleDiv.innerHTML = `<strong>Role: </strong>${selectedCashier.role}`;
+    } else {
+        cashierRoleDiv.innerHTML = '';
+    }
+}
+
+// Initialize customer and cashier dropdowns
+function initializeDropdowns(customers, cashiers) {
+    var customerDropdown = document.getElementById('customerDropdown');
+    var cashierDropdown = document.getElementById('cashierDropdown');
+
+    customers.forEach(function(customer) {
+        var option = document.createElement('option');
+        option.value = customer.id;
+        option.textContent = customer.name;
+        customerDropdown.appendChild(option);
+    });
+
+    cashiers.forEach(function(cashier) {
+        var option = document.createElement('option');
+        option.value = cashier.id;
+        option.textContent = `${cashier.name} - ${cashier.role}`;
+        cashierDropdown.appendChild(option);
+    });
+}
+
+
+
+// Show Order Summary
+function showOrderSummary() {
+    var cart = JSON.parse(localStorage.getItem('cart')) || [];
+    var selectedCustomerId = document.getElementById('customerDropdown').value;
+    var selectedCashierId = document.getElementById('cashierDropdown').value;
+    
+    var customers = JSON.parse(localStorage.getItem('customers')) || [];
+    var cashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+    var customer = customers.find(c => c.id === selectedCustomerId);
+    var cashier = cashiers.find(c => c.id === selectedCashierId);
+
+    if (!customer || !cashier) {
+        alert("Please select both a customer and a cashier.");
+        return;
+    }
+
+    var totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+
+    // Open a new tab and display the order summary
+    var newWindow = window.open('', '', 'width=800, height=600');
+    newWindow.document.write(`
+        <html>
+        <head>
+            <title>Order Summary</title>
+        </head>
+        <body>
+            <h1>Order Summary</h1>
+            <p><strong>Customer Name: </strong>${customer.name}</p>
+            <p><strong>Customer ID: </strong>${customer.id}</p>
+            <p><strong>Cashier Name: </strong>${cashier.name}</p>
+            <p><strong>Cashier Role: </strong>${cashier.role}</p>
+            <h3>Products:</h3>
+            <ul>
+                ${cart.map(item => `
+                    <li>${item.name} - Quantity: ${item.quantity} - Price: $${item.price} each</li>
+                `).join('')}
+            </ul>
+            <h3>Total Price: $${totalPrice.toFixed(2)}</h3>
+        </body>
+        </html>
+    `);
+}
+
+// Proceed to checkout
+function proceedToCheckout() {
+    var cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+
+    var selectedCustomerId = document.getElementById('customerDropdown').value;
+    var selectedCashierId = document.getElementById('cashierDropdown').value;
+
+    if (!selectedCustomerId || !selectedCashierId) {
+        alert('Please select both a customer and a cashier!');
+        return;
+    }
+
+    // Find the customer and cashier details
+    var customers = JSON.parse(localStorage.getItem('customers')) || [];
+    var cashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
+    var customer = customers.find(c => c.id === selectedCustomerId);
+    var cashier = cashiers.find(c => c.id === selectedCashierId);
+
+    if (!customer || !cashier) {
+        alert("Invalid customer or cashier data.");
+        return;
+    }
+
+    // Calculate the total price
+    var totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+
+    // Open a new tab to show the checkout summary with design
+    var newWindow = window.open('', '', 'width=800, height=600');
+    newWindow.document.write(`
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Checkout Summary</title>
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f9f9f9;
+                    color: #333;
+                }
+                header {
+                    background: #1b5e20;
+                    color: #fff;
+                    padding: 20px 0;
+                    text-align: center;
+                }
+                h1, h2 {
+                    color: #1b5e20;
+                }
+                section {
+                    background-color: #fff;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                    margin-top: 20px;
+                }
+                table {
+                    width: 100%;
+                    margin-top: 20px;
+                    border-collapse: collapse;
+                }
+                table th, table td {
+                    padding: 10px;
+                    text-align: left;
+                    border-bottom: 1px solid #ddd;
+                }
+                table th {
+                    background-color: #1b5e20;
+                    color: white;
+                }
+                footer {
+                    background: #1B5E20;
+                    color: white;
+                    text-align: center;
+                    padding: 15px 0;
+                    position: fixed;
+                    bottom: 0;
+                    width: 100%;
+                }
+                .total-price {
+                    font-size: 1.2em;
+                    font-weight: bold;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <header>
+                <h1>Good Tree International Store - Checkout Summary</h1>
+            </header>
+
+            <div class="container" style="width: 80%; margin: auto;">
+                <section>
+                    <h2>Customer Information</h2>
+                    <p><strong>Name:</strong> ${customer.name}</p>
+                    <p><strong>ID:</strong> ${customer.id}</p>
+                </section>
+
+                <section>
+                    <h2>Cashier Information</h2>
+                    <p><strong>Name:</strong> ${cashier.name}</p>
+                    <p><strong>Role:</strong> ${cashier.role}</p>
+                </section>
+
+                <section>
+                    <h2>Purchased Products</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price per Unit</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${cart.map(item => `
+                                <tr>
+                                    <td>${item.name}</td>
+                                    <td>${item.quantity}</td>
+                                    <td>$${item.price.toFixed(2)}</td>
+                                    <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div class="total-price">
+                        <h3>Total Price: $${totalPrice.toFixed(2)}</h3>
+                    </div>
+                </section>
+            </div>
+
+            <footer>
+                <p>&copy; Rolando E. Buendia & Jeishan Marc Agustin</p>
+            </footer>
+        </body>
+        </html>
+    `);
+}
+
+
+window.onload = initializeData;
+</script>
+
+</body>
+</html>
