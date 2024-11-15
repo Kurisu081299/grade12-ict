@@ -276,88 +276,7 @@ function chooseCashier() {
     alert(`Cashier selected: ${selectedCashier}`);
 }
 
-// Display the selected cashier's role
-function displayCashierRole() {
-    var cashierDropdown = document.getElementById('cashierDropdown');
-    var selectedCashierId = cashierDropdown.value;
-    var storedCashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
-
-    var selectedCashier = storedCashiers.find(cashier => cashier.id === selectedCashierId);
-    var cashierRoleDiv = document.getElementById('cashierRole');
-
-    if (selectedCashier) {
-        cashierRoleDiv.innerHTML = `<strong>Role: </strong>${selectedCashier.role}`;
-    } else {
-        cashierRoleDiv.innerHTML = '';
-    }
-}
-
-// Initialize customer and cashier dropdowns
-function initializeDropdowns(customers, cashiers) {
-    var customerDropdown = document.getElementById('customerDropdown');
-    var cashierDropdown = document.getElementById('cashierDropdown');
-
-    customers.forEach(function(customer) {
-        var option = document.createElement('option');
-        option.value = customer.id;
-        option.textContent = customer.name;
-        customerDropdown.appendChild(option);
-    });
-
-    cashiers.forEach(function(cashier) {
-        var option = document.createElement('option');
-        option.value = cashier.id;
-        option.textContent = `${cashier.name} - ${cashier.role}`;
-        cashierDropdown.appendChild(option);
-    });
-}
-
-
-
-// Show Order Summary
-function showOrderSummary() {
-    var cart = JSON.parse(localStorage.getItem('cart')) || [];
-    var selectedCustomerId = document.getElementById('customerDropdown').value;
-    var selectedCashierId = document.getElementById('cashierDropdown').value;
-    
-    var customers = JSON.parse(localStorage.getItem('customers')) || [];
-    var cashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
-    var customer = customers.find(c => c.id === selectedCustomerId);
-    var cashier = cashiers.find(c => c.id === selectedCashierId);
-
-    if (!customer || !cashier) {
-        alert("Please select both a customer and a cashier.");
-        return;
-    }
-
-    var totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-
-    // Open a new tab and display the order summary
-    var newWindow = window.open('', '', 'width=800, height=600');
-    newWindow.document.write(`
-        <html>
-        <head>
-            <title>Order Summary</title>
-        </head>
-        <body>
-            <h1>Order Summary</h1>
-            <p><strong>Customer Name: </strong>${customer.name}</p>
-            <p><strong>Customer ID: </strong>${customer.id}</p>
-            <p><strong>Cashier Name: </strong>${cashier.name}</p>
-            <p><strong>Cashier Role: </strong>${cashier.role}</p>
-            <h3>Products:</h3>
-            <ul>
-                ${cart.map(item => `
-                    <li>${item.name} - Quantity: ${item.quantity} - Price: $${item.price} each</li>
-                `).join('')}
-            </ul>
-            <h3>Total Price: $${totalPrice.toFixed(2)}</h3>
-        </body>
-        </html>
-    `);
-}
-
-// Proceed to checkout
+// Proceed to Checkout - Check Stock Availability
 function proceedToCheckout() {
     var cart = JSON.parse(localStorage.getItem('cart')) || [];
     if (cart.length === 0) {
@@ -373,138 +292,50 @@ function proceedToCheckout() {
         return;
     }
 
-    // Find the customer and cashier details
-    var customers = JSON.parse(localStorage.getItem('customers')) || [];
-    var cashiers = JSON.parse(localStorage.getItem('cashiers')) || [];
-    var customer = customers.find(c => c.id === selectedCustomerId);
-    var cashier = cashiers.find(c => c.id === selectedCashierId);
+    // Get products from localStorage
+    var products = JSON.parse(localStorage.getItem('products')) || [];
 
-    if (!customer || !cashier) {
-        alert("Invalid customer or cashier data.");
+    // Check for out-of-stock items
+    var outOfStockItems = [];
+    cart.forEach(function(item) {
+        var product = products.find(p => p.id === item.id);
+        if (product && item.quantity > product.quantity) {
+            outOfStockItems.push(item.name);
+        }
+    });
+
+    if (outOfStockItems.length > 0) {
+        alert('The following items are out of stock: ' + outOfStockItems.join(', ') + '. Please adjust your cart.');
         return;
     }
 
-    // Calculate the total price
+    // Calculate the total price and proceed to summary
     var totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-
-    // Open a new tab to show the checkout summary with design
-    var newWindow = window.open('', '', 'width=800, height=600');
-    newWindow.document.write(`
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Checkout Summary</title>
-            <style>
-                body {
-                    font-family: 'Arial', sans-serif;
-                    margin: 0;
-                    padding: 0;
-                    background-color: #f9f9f9;
-                    color: #333;
-                }
-                header {
-                    background: #1b5e20;
-                    color: #fff;
-                    padding: 20px 0;
-                    text-align: center;
-                }
-                h1, h2 {
-                    color: #1b5e20;
-                }
-                section {
-                    background-color: #fff;
-                    padding: 20px;
-                    border-radius: 10px;
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                    margin-top: 20px;
-                }
-                table {
-                    width: 100%;
-                    margin-top: 20px;
-                    border-collapse: collapse;
-                }
-                table th, table td {
-                    padding: 10px;
-                    text-align: left;
-                    border-bottom: 1px solid #ddd;
-                }
-                table th {
-                    background-color: #1b5e20;
-                    color: white;
-                }
-                footer {
-                    background: #1B5E20;
-                    color: white;
-                    text-align: center;
-                    padding: 15px 0;
-                    position: fixed;
-                    bottom: 0;
-                    width: 100%;
-                }
-                .total-price {
-                    font-size: 1.2em;
-                    font-weight: bold;
-                    margin-top: 20px;
-                }
-            </style>
-        </head>
-        <body>
-            <header>
-                <h1>Good Tree International Store - Checkout Summary</h1>
-            </header>
-
-            <div class="container" style="width: 80%; margin: auto;">
-                <section>
-                    <h2>Customer Information</h2>
-                    <p><strong>Name:</strong> ${customer.name}</p>
-                    <p><strong>ID:</strong> ${customer.id}</p>
-                </section>
-
-                <section>
-                    <h2>Cashier Information</h2>
-                    <p><strong>Name:</strong> ${cashier.name}</p>
-                    <p><strong>Role:</strong> ${cashier.role}</p>
-                </section>
-
-                <section>
-                    <h2>Purchased Products</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Price per Unit</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${cart.map(item => `
-                                <tr>
-                                    <td>${item.name}</td>
-                                    <td>${item.quantity}</td>
-                                    <td>$${item.price.toFixed(2)}</td>
-                                    <td>$${(item.price * item.quantity).toFixed(2)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-
-                    <div class="total-price">
-                        <h3>Total Price: $${totalPrice.toFixed(2)}</h3>
-                    </div>
-                </section>
-            </div>
-
-            <footer>
-                <p>&copy; Rolando E. Buendia & Jeishan Marc Agustin</p>
-            </footer>
-        </body>
-        </html>
-    `);
+    alert(`Proceeding to checkout. Total price: $${totalPrice.toFixed(2)}`);
+    // Proceed with checkout summary...
 }
 
+// Initialize customers and cashiers dropdown
+function initializeDropdowns(customers, cashiers) {
+    var customerDropdown = document.getElementById('customerDropdown');
+    var cashierDropdown = document.getElementById('cashierDropdown');
+    
+    customers.forEach(function(customer) {
+        var option = document.createElement('option');
+        option.value = customer.id;
+        option.textContent = customer.name;
+        customerDropdown.appendChild(option);
+    });
 
+    cashiers.forEach(function(cashier) {
+        var option = document.createElement('option');
+        option.value = cashier.id;
+        option.textContent = cashier.name;
+        cashierDropdown.appendChild(option);
+    });
+}
+
+// Initialize data when the page is loaded
 window.onload = initializeData;
 </script>
 

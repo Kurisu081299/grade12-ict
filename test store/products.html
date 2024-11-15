@@ -122,7 +122,7 @@
         </nav>
     </header>
 
-<<<<<<< HEAD
+
     <div class="container">
         <!-- Get All Products Section -->
         <section>
@@ -169,73 +169,12 @@
         </section>
 
     </div>
-=======
-<header>
-    <h1>GoodTree Sandwich Store</h1>
-    <nav>
-        <a href="home.html" target="_blank">Home</a>
-        <a href="products.html" target="_blank">Products</a>
-        <a href="cashier.html" target="_blank">Cashier</a>
-        <a href="customer.html" target="_blank">Customer</a>
-        <a href="order.html" target="_blank">Orders</a>
-        <a href="report.html" target="_blank">Report</a>
-        <a href="faq.html" targer="_blank">About Us</a>
-    </nav>
-</header>
 
-<div class="container">
-    <!-- Display Products Section -->
-    <section>
-        <h2>Explore Our Sandwiches and Drinks</h2>
-        <div id="productList"></div> <!-- Products will be displayed here -->
-    </section>
-
-    <!-- Insert Product Section -->
-    <section>
-        <h2>Insert New Product</h2>
-        <div class="order-form">
-            <label for="productName">Product Name:</label>
-            <input type="text" id="productName" placeholder="Enter product name">
-            <label for="productPrice">Product Price:</label>
-            <input type="text" id="productPrice" placeholder="Enter product price">
-            <label for="productDescription">Product Description:</label>
-            <input type="text" id="productDescription" placeholder="Enter product description">
-            <button onclick="insertProduct()">Add Product</button>
-        </div>
-    </section>
-
-    <!-- Update Product Section -->
-    <section>
-        <h2>Update Product</h2>
-        <div class="order-form">
-            <label for="updateProductId">Product ID:</label>
-            <input type="text" id="updateProductId" placeholder="Enter Product ID">
-            <label for="updateProductName">New Product Name:</label>
-            <input type="text" id="updateProductName" placeholder="Enter new product name">
-            <label for="updateProductPrice">New Product Price:</label>
-            <input type="text" id="updateProductPrice" placeholder="Enter new price">
-            <label for="updateProductDescription">New Product Description:</label>
-            <input type="text" id="updateProductDescription" placeholder="Enter new description">
-            <button onclick="updateProduct()">Update Product</button>
-        </div>
-    </section>
-
-    <!-- Delete Product Section -->
-    <section>
-        <h2>Delete Product</h2>
-        <div class="order-form">
-            <label for="deleteProductId">Product ID to delete:</label>
-            <input type="text" id="deleteProductId" placeholder="Enter Product ID to delete">
-            <button onclick="deleteProduct()">Delete Product</button>
-        </div>
-    </section>
->>>>>>> b88f18a5fd9d9b829447744f5aa0fc58127c82b6
 
     <footer>
         <p>&copy; Rolando E. Buendia & Jeishan Marc Agustin</p>
     </footer>
 
-<<<<<<< HEAD
     <script>
         // JavaScript for Product Management
         function initializeProductData() {
@@ -333,108 +272,5 @@
 
         window.onload = initializeProductData;
     </script>
-=======
-</div>
-
-<script>
-// Simulate a database of products
-let products = [
-    { id: 1, name: 'Hotdog', price: '$0.79', description: 'Get a GoodTreenian hot dog for 79 cents.' },
-    { id: 2, name: 'Burger', price: '$0.60', description: 'Get a GoodTreenian Burger for 60 cents.' },
-    { id: 3, name: 'Sandwich', price: '$0.30', description: 'Get a GoodTreenian Sandwich for 30 cents.' },
-    { id: 4, name: 'Bread', price: '$0.15', description: 'Get a GoodTreenian Bread for 15 cents.' },
-    { id: 5, name: 'Coca-Cola', price: '$0.50', description: 'Refreshen yourself with Coca-Cola.' },
-    { id: 6, name: 'Lemon Juice', price: '$0.30', description: 'Want a taste of sourness? You\'ll love this one!' }
-];
-
-// Display all available products
-function displayProducts() {
-    let productList = document.getElementById('productList');
-    productList.innerHTML = ''; // Clear the list before adding new products
-
-    products.forEach(function(product) {
-        let productDiv = document.createElement('div');
-        productDiv.className = 'product';
-        productDiv.innerHTML = `
-            <h3>${product.name}</h3>
-            <b><p>Price: ${product.price}</p></b>
-            <p>Description: ${product.description}</p>
-            <p><b>ID:</b> ${product.id}</p>
-        `;
-        productList.appendChild(productDiv);
-    });
-}
-
-// Insert new product into the product list
-function insertProduct() {
-    let productName = document.getElementById('productName').value;
-    let productPrice = document.getElementById('productPrice').value;
-    let productDescription = document.getElementById('productDescription').value;
-
-    if (productName && productPrice && productDescription) {
-        // Add dollar sign if not present
-        if (!productPrice.startsWith('$')) {
-            productPrice = '$' + productPrice;
-        }
-
-        let newProduct = {
-            id: products.length + 1,
-            name: productName,
-            price: productPrice,
-            description: productDescription
-        };
-        products.push(newProduct);
-        alert('Product added successfully!');
-        displayProducts();  // Re-display the products after insertion
-    } else {
-        alert('Please fill in all fields!');
-    }
-}
-
-// Update product information by ID
-function updateProduct() {
-    let productId = parseInt(document.getElementById('updateProductId').value);
-    let newProductName = document.getElementById('updateProductName').value;
-    let newProductPrice = document.getElementById('updateProductPrice').value;
-    let newProductDescription = document.getElementById('updateProductDescription').value;
-
-    let product = products.find(p => p.id === productId);
-    if (product) {
-        product.name = newProductName || product.name;
-        
-        // Ensure the price has a dollar sign
-        if (newProductPrice) {
-            newProductPrice = newProductPrice.startsWith('$') ? newProductPrice : '$' + newProductPrice;
-            product.price = newProductPrice;
-        }
-        
-        product.description = newProductDescription || product.description;
-
-        alert('Product updated successfully!');
-        displayProducts();  // Re-display the products after update
-    } else {
-        alert('Product not found!');
-    }
-}
-
-// Delete a product by ID
-function deleteProduct() {
-    let productId = parseInt(document.getElementById('deleteProductId').value);
-    let productIndex = products.findIndex(p => p.id === productId);
-
-    if (productIndex !== -1) {
-        products.splice(productIndex, 1);  // Remove product from the array
-        alert('Product deleted successfully!');
-        displayProducts();  // Re-display the products after deletion
-    } else {
-        alert('Product not found!');
-    }
-}
-
-// Initially display all products when the page loads
-displayProducts();
-</script>
-
->>>>>>> b88f18a5fd9d9b829447744f5aa0fc58127c82b6
 </body>
 </html>
