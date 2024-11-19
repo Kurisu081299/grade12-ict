@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background: #1b5e20;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        nav {
+            margin: 50px 0;
+            text-align: center;
+            color: #1B5E20;
+        }
+        nav a {
+            margin: 0 30px;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #FFD700;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        footer {
+            background: #1B5E20;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        h2, h3 {
+            color: #1b5e20;
+        }
+        select, input[type="text"], input[type="number"], button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #1B5E20;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #4CAF50;
+        }
+        #productList {
+            max-width: 400px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .product-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+        }
+        .delete-button {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+        .delete-button:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Good Tree International Store - Product Management</h1>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cashier.html">Cashier</a>
+            <a href="customer.html">Customer</a> 
+            <a href="order.html">Orders</a>
+            <a href="report.html">Report</a>
+            <a href="faq.html">About Us</a>
+            <a href="purchase.html">Cart</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section>
+            <h2>View All Products</h2>
+            <button onclick="getAllProducts()">Get All Products</button>
+            <div id="productList"></div>
+        </section>
+
+        <section>
+            <h2>Add New Product</h2>
+            <h3>Enter Product Details</h3>
+            <input type="text" id="newProductName" placeholder="Enter product name" />
+            <input type="number" id="newProductPrice" placeholder="Enter product price" />
+            <input type="number" id="newProductQuantity" placeholder="Enter product quantity" />
+            <input type="text" id="newProductDescription" placeholder="Enter product description" />
+            <button onclick="addNewProduct()">Add Product</button>
+        </section>
+
+        <section>
+            <h2>Update Product Information</h2>
+            <h3>Select Product to Update</h3>
+            <select id="productDropdown" required>
+                <option value="" disabled selected>Select a Product</option>
+            </select>
+            <h3>Update Product Details</h3>
+            <input type="text" id="updateProductName" placeholder="Update product name" />
+            <input type="number" id="updateProductPrice" placeholder="Update product price" />
+            <input type="number" id="updateProductQuantity" placeholder="Update product quantity" />
+            <input type="text" id="updateProductDescription" placeholder="Update product description" />
+            <button onclick="updateProduct()">Update Product</button>
+        </section>
+
+        <section>
+            <h2>Delete Product</h2>
+            <h3>Select Product to Delete</h3>
+            <select id="deleteProductDropdown" required>
+                <option value="" disabled selected>Select a Product</option>
+            </select>
+            <button onclick="deleteProduct()">Delete Product</button>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; Rolando E. Buendia & Jeishan Marc Agustin</p>
+    </footer>
+
+    <script>
+        function initializeProductData() {
+            var storedProducts = JSON.parse(localStorage.getItem('products')) || [];
+            if (storedProducts.length > 0) {
+                updateDropdown(storedProducts);
+            }
+        }
+
+        function updateDropdown(products) {
+            var selectElement = document.getElementById('productDropdown');
+            var deleteSelectElement = document.getElementById('deleteProductDropdown');
+            selectElement.innerHTML = '<option value="" disabled selected>Select a Product</option>';
+            deleteSelectElement.innerHTML = '<option value="" disabled selected>Select a Product</option>';
+
+            products.forEach(function(product) {
+                var option = document.createElement("option");
+                option.value = product.id;
+                option.text = `${product.name} - $${product.price} - Quantity: ${product.quantity}`;
+                selectElement.appendChild(option);
+                deleteSelectElement.appendChild(option);
+            });
+        }
+
+        function addNewProduct() {
+            var name = document.getElementById('newProductName').value.trim();
+            var price = document.getElementById('newProductPrice').value.trim();
+            var quantity = document.getElementById('newProductQuantity').value.trim();
+            var description = document.getElementById('newProductDescription').value.trim();
+
+            if (name && price && quantity && description) {
+                var storedProducts = JSON.parse(localStorage.getItem('products')) || [];
+                var newProduct = { name: name, price: parseFloat(price), quantity: parseInt(quantity), description: description, id: Date.now().toString() };
+                storedProducts.push(newProduct);
+                localStorage.setItem('products', JSON.stringify(storedProducts));
+                updateDropdown(storedProducts);
+
+                document.getElementById('newProductName').value = '';
+                document.getElementById('newProductPrice').value = '';
+                document.getElementById('newProductQuantity').value = '';
+                document.getElementById('newProductDescription').value = '';
+                alert('New product added: ' + name);
+            } else {
+                alert('Please fill out all fields.');
+            }
+        }
+
+        function getAllProducts() {
+            var storedProducts = JSON.parse(localStorage.getItem('products')) || [];
+            var productListDiv = document.getElementById('productList');
+            if (storedProducts.length > 0) {
+                productListDiv.innerHTML = '<ul>' + storedProducts.map(function(product) {
+                    return `<li>Name: ${product.name}, Price: $${product.price}, Quantity: ${product.quantity}</li>`;
+                }).join('') + '</ul>';
+            } else {
+                productListDiv.innerHTML = '<p>No products found.</p>';
+            }
+        }
+
+        function updateProduct() {
+            var productID = document.getElementById('productDropdown').value;
+            var name = document.getElementById('updateProductName').value.trim();
+            var price = document.getElementById('updateProductPrice').value.trim();
+            var quantity = document.getElementById('updateProductQuantity').value.trim();
+            var description = document.getElementById('updateProductDescription').value.trim();
+
+            var storedProducts = JSON.parse(localStorage.getItem('products')) || [];
+            var productToUpdate = storedProducts.find(product => product.id === productID);
+
+            if (productToUpdate) {
+                if (name) productToUpdate.name = name;
+                if (price) productToUpdate.price = parseFloat(price);
+                if (quantity) productToUpdate.quantity = parseInt(quantity);
+                if (description) productToUpdate.description = description;
+
+                localStorage.setItem('products', JSON.stringify(storedProducts));
+                updateDropdown(storedProducts);
+                alert('Product updated successfully.');
+            } else {
+                alert('Please select a valid product to update.');
+            }
+        }
+
+        function deleteProduct() {
+            var productID = document.getElementById('deleteProductDropdown').value;
+            var storedProducts = JSON.parse(localStorage.getItem('products')) || [];
+            var updatedProducts = storedProducts.filter(product => product.id !== productID);
+
+            localStorage.setItem('products', JSON.stringify(updatedProducts));
+            updateDropdown(updatedProducts);
+            getAllProducts();
+            alert('Product deleted successfully.');
+        }
+
+        window.onload = initializeProductData;
+    </script>
+</body>
+</html>
