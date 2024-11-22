@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Simple Store</title>
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background: #1B5E20;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        .confirmation {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        footer {
+            background: #1B5E20;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Order Confirmation</h1>
+</header>
+
+<div class="container">
+    <div class="confirmation">
+        <h2>Thank You for Your Order!</h2>
+        <p>Your order has been successfully placed.</p>
+        <p><strong>Order Details:</strong></p>
+        <p>Product: <span id="product-name">[Product Name]</span></p>
+        <p>Name: <span id="customer-name">[Customer Name]</span></p>
+        <p>Email: <span id="customer-email">[Customer Email]</span></p>
+        <p>Shipping Address: <span id="customer-address">[Shipping Address]</span></p>
+        <p>We will process your order shortly!</p>
+        <a href="home.html" style="text-decoration: none; color: #1B5E20;">Home</a>
+    </div>
+</div>
+
+<script>
+    // Extract query parameters and display them
+    const urlParams = new URLSearchParams(window.location.search);
+    const productName = urlParams.get('product') || 'Unknown Product';
+    const customerName = urlParams.get('name') || 'Anonymous';
+    const customerEmail = urlParams.get('email') || 'Not Provided';
+    const customerAddress = urlParams.get('address') || 'Not Provided';
+
+    document.getElementById('product-name').innerText = productName;
+    document.getElementById('customer-name').innerText = customerName;
+    document.getElementById('customer-email').innerText = customerEmail;
+    document.getElementById('customer-address').innerText = customerAddress;
+</script>
+
+</body>
+</html>
